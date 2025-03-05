@@ -1,0 +1,80 @@
+x-php: &php
+  build:
+    context: ./
+    dockerfile: ./.docker/php/Dockerfile
+    target: app_php_prod
+    args:
+      - ALPINE_VERSION
+      - PHP_VERSION
+      - COMPOSER_VERSION
+      - PHP_EXT_INSTALLER_VERSION
+      - GOLANG_VERSION
+      - USER_NAME
+      - GROUP_NAME
+      - UID
+      - GID
+  env_file: .app.env
+  networks:
+    - default
+  depends_on:
+    db:
+      condition: service_healthy
+    cache:
+      condition: service_healthy
+
+services:
+  app:
+    <<: *php
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${ROAD_RUNNER_HTTP_PORT:-8080}:8080
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${ROAD_RUNNER_RPC_PORT:-6001}:6001
+    volumes:
+      - app_storage:/app/storage
+    entrypoint: /usr/local/bin/entrypoint.sh
+
+  utils:
+    <<: *php
+    container_name: utils
+    command: supercronic /etc/supercronic/crontab
+
+  db:
+    image: postgres:${POSTGRES_VERSION:-17.4}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+      - db_dump:/dump/
+    networks:
+      - default
+    environment:
+      POSTGRES_USER: ${DB_USER:?}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?}
+      POSTGRES_DB: ${DB_DATABASE:?}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}' ]
+      start_period: 2s
+      retries: 10
+      interval: 2s
+      timeout: 5s
+
+  cache:
+    image: redis:${REDIS_VERSION:-7.4}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${REDIS_PORT:-6379}:6379
+    volumes:
+      - cache_data:/data/
+    networks:
+      - default
+    healthcheck:
+      test: [ 'CMD-SHELL', 'redis-cli ping' ]
+      interval: 500ms
+      timeout: 1s
+
+volumes:
+  app_storage:
+  db_data:
+  db_dump:
+  cache_data:
+
+networks:
+  default:

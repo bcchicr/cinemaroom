@@ -1,0 +1,29 @@
+# Запретить все
+*
+
+# Кроме
+# Docker
+!.docker/php/config/*
+!.docker/php/entrypoint.sh
+!.docker/supercronic/*
+
+## Директории проекта
+!app
+!public
+!tests
+
+## Файлы проекта
+!.rr.yaml
+!.styleci.yml
+!app.php
+!composer.json
+!composer.lock
+!functions.php
+!phpunit.xml
+!psalm.xml
+
+# В разрешенных директориях запретить
+**/*~
+**/*.log
+**/DS_Store
+**/Thumbs.db
