@@ -13,4 +13,3 @@ protoc-gen-php-grpc*
 .rr.local.yaml
 .docker/php/config/dev.ini
 compose.local.yml
-rr
