@@ -1,41 +1,31 @@
-x-php: &php
-  build:
-    context: ./
-    dockerfile: ./.docker/php/Dockerfile
-    target: app_php_prod
-    args:
-      - ALPINE_VERSION
-      - PHP_VERSION
-      - COMPOSER_VERSION
-      - PHP_EXT_INSTALLER_VERSION
-      - GOLANG_VERSION
-      - USER_NAME
-      - GROUP_NAME
-      - UID
-      - GID
-  env_file: .app.env
-  networks:
-    - default
-  depends_on:
-    db:
-      condition: service_healthy
-    cache:
-      condition: service_healthy
-
 services:
   app:
-    <<: *php
+    build:
+      context: ./
+      dockerfile: ./.docker/php/Dockerfile
+      target: app_php_prod
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - GOLANG_VERSION
+        - USER_NAME
+        - GROUP_NAME
+        - UID
+        - GID
+    env_file: .app.env
+    networks:
+      - default
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
     ports:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${ROAD_RUNNER_HTTP_PORT:-8080}:8080
       - ${NETWORK_INTERFACE:-127.0.0.1}:${ROAD_RUNNER_RPC_PORT:-6001}:6001
-    volumes:
-      - app_storage:/app/storage
     entrypoint: /usr/local/bin/entrypoint.sh
-
-  utils:
-    <<: *php
-    container_name: utils
-    command: supercronic /etc/supercronic/crontab
 
   db:
     image: postgres:${POSTGRES_VERSION:-17.4}
@@ -43,7 +33,6 @@ services:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432
     volumes:
       - db_data:/var/lib/postgresql/data/
-      - db_dump:/dump/
     networks:
       - default
     environment:
@@ -71,7 +60,6 @@ services:
       timeout: 1s
 
 volumes:
-  app_storage:
   db_data:
   db_dump:
   cache_data:

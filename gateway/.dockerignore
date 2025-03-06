@@ -1,11 +1,11 @@
 # Запретить все
-*
+../.env
 
 # Кроме
 # Docker
-!.docker/php/config/*
-!.docker/php/entrypoint.sh
-!.docker/supercronic/*
+!gateway/.docker/php/config/*
+!gateway/.docker/php/entrypoint.sh
+!gateway/.docker/supercronic/*
 
 ## Директории проекта
 !app

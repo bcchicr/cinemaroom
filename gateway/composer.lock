@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2c52777671abb0d8e00fb2e3b02e1ff",
+    "content-hash": "499313e659a0cb134aafa3246275f025",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -548,16 +548,16 @@
         },
         {
             "name": "cycle/migrations",
-            "version": "v4.2.4",
+            "version": "v4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/migrations.git",
-                "reference": "e7289b8a036ebea60144bced7837706f94e7bd1c"
+                "reference": "0a99d7f85655ca7d682b4a8c30860e0f01b43506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/migrations/zipball/e7289b8a036ebea60144bced7837706f94e7bd1c",
-                "reference": "e7289b8a036ebea60144bced7837706f94e7bd1c",
+                "url": "https://api.github.com/repos/cycle/migrations/zipball/0a99d7f85655ca7d682b4a8c30860e0f01b43506",
+                "reference": "0a99d7f85655ca7d682b4a8c30860e0f01b43506",
                 "shasum": ""
             },
             "require": {
@@ -572,8 +572,8 @@
                 "buggregator/trap": "^1.11",
                 "mockery/mockery": "^1.5",
                 "phpunit/phpunit": "^9.5",
-                "spiral/code-style": "~2.2.0",
-                "vimeo/psalm": "^5.25"
+                "spiral/code-style": "^2.2.0",
+                "vimeo/psalm": "^6.4"
             },
             "type": "library",
             "autoload": {
@@ -588,9 +588,9 @@
             "description": "Database migrations, migration scaffolding",
             "support": {
                 "issues": "https://github.com/cycle/migrations/issues",
-                "source": "https://github.com/cycle/migrations/tree/v4.2.4"
+                "source": "https://github.com/cycle/migrations/tree/v4.2.5"
             },
-            "time": "2024-10-24T17:37:13+00:00"
+            "time": "2025-02-06T11:59:51+00:00"
         },
         {
             "name": "cycle/orm",
@@ -910,32 +910,34 @@
         },
         {
             "name": "doctrine/collections",
-            "version": "1.8.0",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/collections.git",
-                "reference": "2b44dd4cbca8b5744327de78bafef5945c7e7b5e"
+                "reference": "d8af7f248c74f195f7347424600fd9e17b57af59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/2b44dd4cbca8b5744327de78bafef5945c7e7b5e",
-                "reference": "2b44dd4cbca8b5744327de78bafef5945c7e7b5e",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/d8af7f248c74f195f7347424600fd9e17b57af59",
+                "reference": "d8af7f248c74f195f7347424600fd9e17b57af59",
                 "shasum": ""
             },
             "require": {
-                "doctrine/deprecations": "^0.5.3 || ^1",
-                "php": "^7.1.3 || ^8.0"
+                "doctrine/deprecations": "^1",
+                "php": "^8.1"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^9.0 || ^10.0",
-                "phpstan/phpstan": "^1.4.8",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.1.5",
-                "vimeo/psalm": "^4.22"
+                "doctrine/coding-standard": "^12",
+                "ext-json": "*",
+                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^10.5",
+                "vimeo/psalm": "^5.11"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Doctrine\\Common\\Collections\\": "lib/Doctrine/Common/Collections"
+                    "Doctrine\\Common\\Collections\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -974,9 +976,23 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/collections/issues",
-                "source": "https://github.com/doctrine/collections/tree/1.8.0"
+                "source": "https://github.com/doctrine/collections/tree/2.2.2"
             },
-            "time": "2022-09-01T20:12:10+00:00"
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcollections",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-04-18T06:56:21+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -7762,23 +7778,23 @@
         },
         {
             "name": "buggregator/trap",
-            "version": "1.13.3",
+            "version": "1.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/buggregator/trap.git",
-                "reference": "500e7ac1313d35bf0a00540f230f134a8fd0ec91"
+                "reference": "cc23ae67664561fe4e094d23e6f8bf9ce74b398a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/buggregator/trap/zipball/500e7ac1313d35bf0a00540f230f134a8fd0ec91",
-                "reference": "500e7ac1313d35bf0a00540f230f134a8fd0ec91",
+                "url": "https://api.github.com/repos/buggregator/trap/zipball/cc23ae67664561fe4e094d23e6f8bf9ce74b398a",
+                "reference": "cc23ae67664561fe4e094d23e6f8bf9ce74b398a",
                 "shasum": ""
             },
             "require": {
                 "clue/stream-filter": "^1.6",
                 "ext-filter": "*",
                 "ext-sockets": "*",
-                "nunomaduro/termwind": "^1.15 || ^2",
+                "nunomaduro/termwind": "^1.15.1 || ^2",
                 "nyholm/psr7": "^1.8",
                 "php": ">=8.1",
                 "php-http/message": "^1.15",
@@ -7791,18 +7807,18 @@
             "require-dev": {
                 "dereuromark/composer-prefer-lowest": "^0.1.10",
                 "ergebnis/phpunit-slow-test-detector": "^2.14",
-                "google/protobuf": "^3.23",
+                "google/protobuf": "^3.25 || ^4.30",
                 "pestphp/pest": "^2.34",
                 "phpstan/extension-installer": "^1.3",
-                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan": "^1.11",
                 "phpstan/phpstan-deprecation-rules": "^1.1",
                 "phpstan/phpstan-phpunit": "^1.3",
                 "phpstan/phpstan-strict-rules": "^1.5",
-                "phpunit/phpunit": "^10.5",
+                "phpunit/phpunit": "^10.5.10",
                 "rector/rector": "^1.1",
                 "roxblnfk/unpoly": "^1.8.1",
-                "spiral/code-style": "*",
-                "vimeo/psalm": "^5.11"
+                "spiral/code-style": "^2.2.2",
+                "vimeo/psalm": "^6.5"
             },
             "suggest": {
                 "ext-simplexml": "To load trap.xml",
@@ -7853,7 +7869,7 @@
             ],
             "support": {
                 "issues": "https://github.com/buggregator/trap/issues",
-                "source": "https://github.com/buggregator/trap/tree/1.13.3"
+                "source": "https://github.com/buggregator/trap/tree/1.13.4"
             },
             "funding": [
                 {
@@ -7865,7 +7881,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-01-23T20:32:15+00:00"
+            "time": "2025-03-06T10:28:32+00:00"
         },
         {
             "name": "clue/stream-filter",

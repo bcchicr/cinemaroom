@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      target: app_php_dev
+    volumes:
+      - ./:/app
+      - ./.app.env:/app/.env
+    env_file: !reset null
+    extra_hosts:
+      - host.docker.internal:host-gateway
+      -
+  buggregator:
+    image: ghcr.io/buggregator/server:dev
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${BR_HTTP_DUMPS_PORT:-8000}:8000
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${BR_SMTP_PORT:-1025}:1025
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${BR_VAR_DUMPER_PORT:-9912}:9912
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${BR_MONOLOG_PORT:-9913}:9913
+    depends_on:
+      app:
+        condition: service_started
+      utils:
+        condition: service_started
+
+  db:
+    volumes: !override
+      - ./.docker/postgres/dump/:/dump/
+
+volumes: !override
+  db-data:
