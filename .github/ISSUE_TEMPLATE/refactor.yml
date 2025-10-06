@@ -1,0 +1,59 @@
+name: Refactor
+description: Clarification of refactoring
+title: "[Refactor]: "
+labels: ["refactor"]
+assignees: ["bcchicr"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe improvement.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected scope
+      description: In which scope are the changes?
+      options:
+        - authn
+        - chat
+        - chat-authz
+        - gateway
+        - playlist
+        - user
+        - proto
+        - general
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Improvement description
+      description: What to clarify/improve? Why?
+      placeholder: "Clarify validation logic in authn for better security."
+    validations:
+      required: true
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current behavior
+      description: What happens now?
+      placeholder: "Validation does not check edge cases."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-changes
+    attributes:
+      label: Proposed changes
+      description: How to implement?
+      placeholder: "Add unit tests and refactor validateUser method."
+    validations:
+      required: false
+  - type: input
+    id: impact
+    attributes:
+      label: Impact
+      description: What services will be affected? Breaking changes?
+      placeholder: "Only authn, no breaking changes."
+    validations:
+      required: false
