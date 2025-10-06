@@ -1,0 +1,77 @@
+name: Bug Report
+description: Report a bug in the project
+title: "[Bug]: "
+labels: ["bug"]
+assignees: ["bcchicr"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide details for reproduction.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected scope
+      description: In which scope is the bug?
+      options:
+        - authn
+        - chat
+        - chat-authz
+        - gateway
+        - playlist
+        - user
+        - proto
+        - general
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: What happened? What was expected?
+      placeholder: "Bug in authentication: login doesn't work after update."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: How to reproduce the bug?
+      placeholder: |
+        1. Run make up
+        2. Call endpoint /auth/login
+        3. Error 500
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: version
+      description: Specify tag or commit hash
+      placeholder: "v1.0.0 or develop branch"
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/errors
+      description: Paste relevant logs
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Docker, other versions
+      placeholder: "macOS, PHP 8.2, Go 1.21, Docker 24.x"
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Agreement
+      options:
+        - label: I checked that this is not a duplicate
+          required: true
