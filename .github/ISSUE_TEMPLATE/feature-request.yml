@@ -1,0 +1,62 @@
+name: Feature Request
+description: Suggest a new feature
+title: "[Feat]: "
+labels: ["feat"]
+assignees: ["bcchicr"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe what you want to add.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected scope
+      description: In which scope is the feature?
+      options:
+        - authn
+        - chat
+        - chat-authz
+        - gateway
+        - playlist
+        - user
+        - proto
+        - general
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature description
+      description: What to add? Why is it useful?
+      placeholder: "Add endpoint for chat in chat service."
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: Example of usage
+      placeholder: "User can send real-time messages."
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+      default: 1
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Possible alternatives
+      placeholder: "Run on swoole instead of roadrunner"
+    validations:
+      required: false
