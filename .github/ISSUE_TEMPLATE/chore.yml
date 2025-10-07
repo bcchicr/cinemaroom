@@ -1,0 +1,51 @@
+name: Chore Task
+description: Routine maintenance
+title: "[Chore]: "
+labels: ["chore"]
+assignees: ["bcchicr"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the routine task or update.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected service scope
+      description: In which scope are the changes?
+      options:
+        - authn
+        - chat
+        - chat-authz
+        - gateway
+        - playlist
+        - user
+        - proto
+        - general
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Task description
+      description: What needs to be done? Why?
+      placeholder: "Update dependencies in authn service."
+    validations:
+      required: true
+  - type: textarea
+    id: changes
+    attributes:
+      label: Changes made
+      description: List updates (e.g., deps versions)
+      placeholder: "Bump PHP from 8.1 to 8.2."
+    validations:
+      required: false
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Any risks or tests needed?
+      placeholder: "No breaking changes, safe to update."
+    validations:
+      required: false
