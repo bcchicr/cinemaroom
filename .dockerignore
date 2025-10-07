@@ -1,0 +1,20 @@
+# All
+*
+
+# Except
+!.docker/gateway
+
+!services/gateway/app
+!services/gateway/bin
+!services/gateway/config
+!services/gateway/test
+!services/gateway/composer.json
+!services/gateway/composer.lock
+!services/gateway/phpstan.neon.dist
+!services/gateway/phpunit.xml.dist
+
+# But
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db

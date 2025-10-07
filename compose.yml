@@ -1,0 +1,30 @@
+services:
+  gateway:
+    profiles:
+      - app
+      - backend
+    build:
+      context: ./
+      dockerfile: ./.docker/gateway/Dockerfile
+      target: app_php_dev
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - PROTOC_VERSION
+        - UID
+        - GID
+    volumes:
+      - ./services/gateway:/app
+      - ./lib/proto:/lib/proto
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${GATEWAY_PORT:-8000}:9501
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    entrypoint: entrypoint.sh
+
+networks:
+  cinemaroom:
+    name: cinemaroom
