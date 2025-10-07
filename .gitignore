@@ -1,4 +1,9 @@
 .idea
-*.log
 .env
 cog.toml
+.docker/gateway/config/dev.ini
+
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db
