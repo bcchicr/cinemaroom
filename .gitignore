@@ -1,4 +1,10 @@
 .idea
-*.log
 .env
 cog.toml
+.docker/gateway/config/dev.ini
+.php-cs-fixer.cache
+
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db
