@@ -2,6 +2,7 @@
 .env
 cog.toml
 .docker/gateway/config/dev.ini
+.php-cs-fixer.cache
 
 **/*~
 **/*.log

@@ -2,6 +2,7 @@
 *
 
 # Except
+# Gateway
 !.docker/gateway
 
 !services/gateway/app
@@ -12,6 +13,19 @@
 !services/gateway/composer.lock
 !services/gateway/phpstan.neon.dist
 !services/gateway/phpunit.xml.dist
+
+# User
+!.docker/user
+
+!services/user/bin
+!services/user/config
+!services/user/src
+!services/user/.rr.dev.yaml
+!services/user/.rr.yaml
+!services/user/.rr-grpc.yaml
+!services/user/composer.json
+!services/user/composer.lock
+!services/user/symfony.lock
 
 # But
 **/*~
