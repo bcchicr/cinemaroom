@@ -27,6 +27,9 @@
 !services/user/composer.lock
 !services/user/symfony.lock
 
+# Authn
+!.docker/authn
+
 # But
 **/*~
 **/*.log
