@@ -1,9 +1,11 @@
 .idea
 .env
 cog.toml
+.php-cs-fixer.cache
+
 .docker/gateway/config/dev.ini
 .docker/user/config/dev.ini
-.php-cs-fixer.cache
+.docker/chat/config/dev.ini
 
 **/*~
 **/*.log

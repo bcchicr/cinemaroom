@@ -30,6 +30,19 @@
 # Authn
 !.docker/authn
 
+# Chat
+!.docker/chat
+
+!services/chat/app
+!services/chat/tests
+!services/chat/.rr.yaml
+!services/chat/app.php
+!services/chat/composer.json
+!services/chat/composer.lock
+!services/chat/phpunit.xml
+!services/chat/psalm.xml
+!services/chat/psalm-baseline.xml
+
 # But
 **/*~
 **/*.log

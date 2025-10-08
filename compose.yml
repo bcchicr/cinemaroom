@@ -72,6 +72,34 @@ services:
       - go-mod-cache:/go/pkg/mod
     entrypoint: entrypoint.sh
 
+  chat:
+    build:
+      context: ./
+      dockerfile: ./.docker/chat/Dockerfile
+      target: app_php_composer
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - ROADRUNNER_VERSION
+        - PROTOC_VERSION
+        - GOLANG_VERSION
+        - UID
+        - GID
+    volumes:
+      - ./services/chat:/app
+      - ./lib/proto:/lib/proto
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${CHAT_SERVICE_PORT:-8003}:8080
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    environment:
+      RR_CONFIG_FILE: ${USER_RR_CONFIG_FILE}
+    tty: true
+#    entrypoint: entrypoint.sh
+
 networks:
   cinemaroom:
     name: cinemaroom
