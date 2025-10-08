@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn
+	docker-compose up -d gateway user authn chat
 down-backend:
-	docker-compose down --remove-orphans gateway user authn
+	docker-compose down --remove-orphans gateway user authn chat
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn
+	docker-compose down --remove-orphans --volumes gateway user authn chat
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn
+	docker-compose pull --ignore-pull-failures gateway user authn chat
 docker-build-backend:
-	docker-compose build --pull gateway user authn
+	docker-compose build --pull gateway user authn chat
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat
 
 # Gateway
 init-gw: \
@@ -165,3 +165,40 @@ docker-build-authn:
 	docker-compose build --pull authn
 docker-build-authn-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull authn
+
+# Chat
+init-chat: \
+	down-clear-chat \
+	docker-pull-chat \
+	docker-build-chat
+
+init-chat-cu:\
+    down-clear-chat \
+    docker-pull-chat \
+	docker-build-chat-current-user
+
+restart-chat: \
+	down-chat \
+	up-chat
+
+up-chat:
+	docker-compose up -d chat
+down-chat:
+	docker-compose down --remove-orphans chat
+down-clear-chat:
+	docker-compose down --remove-orphans --volumes chat
+
+protoc-chat:
+	docker-compose exec chat sh -c 'protoc \
+		--plugin=protoc-gen-grpc=/usr/bin/protoc-gen-php-grpc \
+		--php_out=/app/generated \
+		--grpc_out=/app/generated \
+		--proto_path=/lib/proto \
+		$$(find /lib/proto -name "*.proto")'
+
+docker-pull-chat:
+	docker-compose pull --ignore-pull-failures chat
+docker-build-chat:
+	docker-compose build --pull chat
+docker-build-chat-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull chat
