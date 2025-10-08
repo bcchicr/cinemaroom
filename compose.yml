@@ -52,6 +52,30 @@ services:
       RR_CONFIG_FILE: ${USER_RR_CONFIG_FILE}
     entrypoint: entrypoint.sh
 
+  authn:
+    build:
+      context: ./
+      dockerfile: ./.docker/authn/Dockerfile
+      target: app_go_dev
+      args:
+        - GOLANG_VERSION
+        - ALPINE_VERSION
+        - PROTOC_VERSION
+        - UID
+        - GID
+    networks:
+      - cinemaroom
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${AUTHN_PORT:-8003}:8080
+    volumes:
+      - ./services/authn:/app
+      - go-mod-cache:/go/pkg/mod
+    entrypoint: entrypoint.sh
+
 networks:
   cinemaroom:
     name: cinemaroom
+
+volumes:
+  go-mod-cache:
+    

@@ -1,6 +1,13 @@
 #!/user/bin/make
 SHELL = /bin/bash
 
+init: init-app
+init-cu: init-app-cu
+restart: restart-app
+up: up-app
+down: down-app
+down-clear: down-clear-app
+
 # App
 init-app: \
 	init-backend
@@ -19,25 +26,31 @@ down-clear-app: \
 
 # Backend
 init-backend: \
-	init-gw \
-	init-user
+	down-clear-backend \
+    docker-pull-backend \
+	docker-build-backend-current-user
 
 init-backend-cu: \
-	init-gw-cu \
-	init-user-cu
+	down-clear-backend \
+    docker-pull-backend \
+	docker-build-backend-current-user
 
 restart-backend: \
-	restart-gw \
-	restart-user
-up-backend: \
-	up-gw \
-	up-user
-down-backend: \
-	down-gw \
-	down-user
-down-clear-backend: \
-	down-clear-gw \
-	down-clear-user
+	down-backend \
+	up-backend
+up-backend:
+	docker-compose up -d gateway user authn
+down-backend:
+	docker-compose down --remove-orphans gateway user authn
+down-clear-backend:
+	docker-compose down --remove-orphans --volumes gateway user authn
+
+docker-pull-backend:
+	docker-compose pull --ignore-pull-failures gateway user authn
+docker-build-backend:
+	docker-compose build --pull gateway user authn
+docker-build-backend-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn
 
 # Gateway
 init-gw: \
@@ -121,3 +134,34 @@ docker-build-user:
 	docker-compose build --pull user
 docker-build-user-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull user
+
+# Authn
+init-authn: \
+	down-clear-authn \
+	docker-pull-authn \
+	docker-build-authn
+
+init-authn-cu:\
+    down-clear-authn \
+    docker-pull-authn \
+	docker-build-authn-current-user
+
+restart-authn: \
+	down-authn \
+	up-authn
+
+up-authn:
+	docker-compose up -d authn
+down-authn:
+	docker-compose down --remove-orphans authn
+down-clear-authn:
+	docker-compose down --remove-orphans --volumes authn
+
+protoc-authn:
+
+docker-pull-authn:
+	docker-compose pull --ignore-pull-failures authn
+docker-build-authn:
+	docker-compose build --pull authn
+docker-build-authn-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull authn
