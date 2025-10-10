@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat
+	docker-compose up -d gateway user authn chat playlist
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat
+	docker-compose down --remove-orphans gateway user authn chat playlist
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat
+	docker-compose build --pull gateway user authn chat playlist
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist
 
 # Gateway
 init-gw: \
@@ -202,3 +202,40 @@ docker-build-chat:
 	docker-compose build --pull chat
 docker-build-chat-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull chat
+
+# Playlist
+init-playlist: \
+	down-clear-playlist \
+	docker-pull-playlist \
+	docker-build-playlist
+
+init-playlist-cu:\
+    down-clear-playlist \
+    docker-pull-playlist \
+	docker-build-playlist-current-user
+
+restart-playlist: \
+	down-playlist \
+	up-playlist
+
+up-playlist:
+	docker-compose up -d playlist
+down-playlist:
+	docker-compose down --remove-orphans playlist
+down-clear-playlist:
+	docker-compose down --remove-orphans --volumes playlist
+
+protoc-playlist:
+	docker-compose exec playlist sh -c 'protoc \
+		--plugin=protoc-gen-grpc=/usr/bin/protoc-gen-php-grpc \
+		--php_out=/app/generated \
+		--grpc_out=/app/generated \
+		--proto_path=/lib/proto \
+		$$(find /lib/proto -name "*.proto")'
+
+docker-pull-playlist:
+	docker-compose pull --ignore-pull-failures playlist
+docker-build-playlist:
+	docker-compose build --pull playlist
+docker-build-playlist-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull playlist
