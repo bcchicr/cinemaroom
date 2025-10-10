@@ -6,6 +6,7 @@ cog.toml
 .docker/gateway/config/dev.ini
 .docker/user/config/dev.ini
 .docker/chat/config/dev.ini
+.docker/playlist/config/dev.ini
 
 **/*~
 **/*.log

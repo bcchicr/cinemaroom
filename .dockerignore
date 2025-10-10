@@ -43,6 +43,19 @@
 !services/chat/psalm.xml
 !services/chat/psalm-baseline.xml
 
+# Playlist
+!.docker/playlist
+
+!services/playlist/app
+!services/playlist/tests
+!services/playlist/.rr.yaml
+!services/playlist/app.php
+!services/playlist/composer.json
+!services/playlist/composer.lock
+!services/playlist/phpunit.xml
+!services/playlist/psalm.xml
+!services/playlist/psalm-baseline.xml
+
 # But
 **/*~
 **/*.log
