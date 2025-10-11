@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat playlist
+	docker-compose up -d gateway user authn chat playlist chat-authz
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat playlist
+	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat playlist
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat playlist
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat playlist
+	docker-compose build --pull gateway user authn chat playlist chat-authz
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz
 
 # Gateway
 init-gw: \
@@ -239,3 +239,40 @@ docker-build-playlist:
 	docker-compose build --pull playlist
 docker-build-playlist-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull playlist
+
+# Chat-authz
+init-chat-authz: \
+	down-clear-chat-authz \
+	docker-pull-chat-authz \
+	docker-build-chat-authz
+
+init-chat-authz-cu:\
+    down-clear-chat-authz \
+    docker-pull-chat-authz \
+	docker-build-chat-authz-current-user
+
+restart-chat-authz: \
+	down-chat-authz \
+	up-chat-authz
+
+up-chat-authz:
+	docker-compose up -d chat-authz
+down-chat-authz:
+	docker-compose down --remove-orphans chat-authz
+down-clear-chat-authz:
+	docker-compose down --remove-orphans --volumes chat-authz
+
+protoc-chat-authz:
+	docker-compose exec chat-authz sh -c 'protoc \
+		--plugin=protoc-gen-grpc=/usr/bin/protoc-gen-php-grpc \
+		--php_out=/app/generated \
+		--grpc_out=/app/generated \
+		--proto_path=/lib/proto \
+		$$(find /lib/proto -name "*.proto")'
+
+docker-pull-chat-authz:
+	docker-compose pull --ignore-pull-failures chat-authz
+docker-build-chat-authz:
+	docker-compose build --pull chat-authz
+docker-build-chat-authz-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull chat-authz

@@ -124,6 +124,32 @@ services:
     tty: true
 #    entrypoint: entrypoint.sh
 
+  chat-authz:
+    build:
+      context: ./
+      dockerfile: ./.docker/chat-authz/Dockerfile
+      target: app_php_composer
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - ROADRUNNER_VERSION
+        - PROTOC_VERSION
+        - GOLANG_VERSION
+        - UID
+        - GID
+    volumes:
+      - ./services/chat-authz:/app
+      - ./lib/proto:/lib/proto
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${CHAT_AUTHZ_SERVICE_PORT:-8005}:8080
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    tty: true
+#    entrypoint: entrypoint.sh
+
 networks:
   cinemaroom:
     name: cinemaroom
