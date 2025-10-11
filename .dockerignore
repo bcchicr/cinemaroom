@@ -56,6 +56,19 @@
 !services/playlist/psalm.xml
 !services/playlist/psalm-baseline.xml
 
+# Chat-authz
+!.docker/chat-authz
+
+!services/chat-authz/app
+!services/chat-authz/tests
+!services/chat-authz/.rr.yaml
+!services/chat-authz/app.php
+!services/chat-authz/composer.json
+!services/chat-authz/composer.lock
+!services/chat-authz/phpunit.xml
+!services/chat-authz/psalm.xml
+!services/chat-authz/psalm-baseline.xml
+
 # But
 **/*~
 **/*.log
