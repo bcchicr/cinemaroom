@@ -208,6 +208,20 @@ services:
     networks:
       - cinemaroom
 
+  minio:
+    image: quay.io/minio/minio:${MINIO_VERSION}
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${MINIO_API_PORT:-9000}:9000
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${MINIO_UI_PORT:-9001}:9001
+    volumes:
+      - minio-data:/data
+    command: server --console-address ":9001" /data
+    networks:
+      - cinemaroom
+
 networks:
   cinemaroom:
     name: cinemaroom
@@ -217,4 +231,5 @@ volumes:
   postgres-data:
   redis-data:
   rabbitmq_data:
+  minio-data:
     

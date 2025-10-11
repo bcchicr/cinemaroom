@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis rabbitmq
+	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis rabbitmq
+	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis rabbitmq
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis rabbitmq
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq
+	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
 
 # Gateway
 init-gw: \
@@ -363,3 +363,32 @@ docker-build-rabbitmq:
 	docker-compose build --pull rabbitmq
 docker-build-rabbitmq-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull rabbitmq
+
+# Minio
+init-minio: \
+	down-clear-minio \
+	docker-pull-minio \
+	docker-build-minio
+
+init-minio-cu:\
+    down-clear-minio \
+    docker-pull-minio \
+	docker-build-minio-current-user
+
+restart-minio: \
+	down-minio \
+	up-minio
+
+up-minio:
+	docker-compose up -d minio
+down-minio:
+	docker-compose down --remove-orphans minio
+down-clear-minio:
+	docker-compose down --remove-orphans --volumes minio
+
+docker-pull-minio:
+	docker-compose pull --ignore-pull-failures minio
+docker-build-minio:
+	docker-compose build --pull minio
+docker-build-minio-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull minio
