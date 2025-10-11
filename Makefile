@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis
+	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis rabbitmq
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis
+	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis rabbitmq
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis rabbitmq
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis rabbitmq
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis
+	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq
 
 # Gateway
 init-gw: \
@@ -306,7 +306,7 @@ docker-build-postgres:
 docker-build-postgres-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull postgres
 
-# Postgres
+# Redis
 init-redis: \
 	down-clear-redis \
 	docker-pull-redis \
@@ -334,3 +334,32 @@ docker-build-redis:
 	docker-compose build --pull redis
 docker-build-redis-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull redis
+
+# Rabbitmq
+init-rabbitmq: \
+	down-clear-rabbitmq \
+	docker-pull-rabbitmq \
+	docker-build-rabbitmq
+
+init-rabbitmq-cu:\
+    down-clear-rabbitmq \
+    docker-pull-rabbitmq \
+	docker-build-rabbitmq-current-user
+
+restart-rabbitmq: \
+	down-rabbitmq \
+	up-rabbitmq
+
+up-rabbitmq:
+	docker-compose up -d rabbitmq
+down-rabbitmq:
+	docker-compose down --remove-orphans rabbitmq
+down-clear-rabbitmq:
+	docker-compose down --remove-orphans --volumes rabbitmq
+
+docker-pull-rabbitmq:
+	docker-compose pull --ignore-pull-failures rabbitmq
+docker-build-rabbitmq:
+	docker-compose build --pull rabbitmq
+docker-build-rabbitmq-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull rabbitmq

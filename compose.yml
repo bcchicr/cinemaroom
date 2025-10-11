@@ -199,6 +199,15 @@ services:
     networks:
       - cinemaroom
 
+  rabbitmq:
+    image: rabbitmq:${RABBITMQ_VERSION}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${RABBITMQ_PORT:-5672}:5672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - cinemaroom
+
 networks:
   cinemaroom:
     name: cinemaroom
@@ -207,4 +216,5 @@ volumes:
   go-mod-cache:
   postgres-data:
   redis-data:
+  rabbitmq_data:
     
