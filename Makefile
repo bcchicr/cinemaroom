@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat playlist chat-authz postgres
+	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres
+	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat playlist chat-authz postgres
+	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis
 
 # Gateway
 init-gw: \
@@ -303,5 +303,34 @@ docker-pull-postgres:
 	docker-compose pull --ignore-pull-failures postgres
 docker-build-postgres:
 	docker-compose build --pull postgres
-docker-build-chat-authz-postgres:
+docker-build-postgres-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull postgres
+
+# Postgres
+init-redis: \
+	down-clear-redis \
+	docker-pull-redis \
+	docker-build-redis
+
+init-redis-cu:\
+    down-clear-redis \
+    docker-pull-redis \
+	docker-build-redis-current-user
+
+restart-redis: \
+	down-redis \
+	up-redis
+
+up-redis:
+	docker-compose up -d redis
+down-redis:
+	docker-compose down --remove-orphans redis
+down-clear-redis:
+	docker-compose down --remove-orphans --volumes redis
+
+docker-pull-redis:
+	docker-compose pull --ignore-pull-failures redis
+docker-build-redis:
+	docker-compose build --pull redis
+docker-build-redis-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull redis
