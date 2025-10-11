@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
+	docker-compose up -d gateway user authn chat playlist chat-authz postgres redis rabbitmq minio buggregator
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
+	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres redis rabbitmq minio buggregator
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres redis rabbitmq minio buggregator
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres redis rabbitmq minio buggregator
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
+	docker-compose build --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq minio buggregator
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq minio
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres redis rabbitmq minio buggregator
 
 # Gateway
 init-gw: \
@@ -392,3 +392,32 @@ docker-build-minio:
 	docker-compose build --pull minio
 docker-build-minio-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull minio
+
+# Buggregator
+init-buggregator: \
+	down-clear-buggregator \
+	docker-pull-buggregator \
+	docker-build-buggregator
+
+init-buggregator-cu:\
+    down-clear-buggregator \
+    docker-pull-buggregator \
+	docker-build-buggregator-current-user
+
+restart-buggregator: \
+	down-minio \
+	up-buggregator
+
+up-buggregator:
+	docker-compose up -d buggregator
+down-buggregator:
+	docker-compose down --remove-orphans buggregator
+down-clear-buggregator:
+	docker-compose down --remove-orphans --volumes buggregator
+
+docker-pull-buggregator:
+	docker-compose pull --ignore-pull-failures buggregator
+docker-build-buggregator:
+	docker-compose build --pull buggregator
+docker-build-buggregator-current-user:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull buggregator

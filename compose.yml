@@ -221,6 +221,19 @@ services:
     command: server --console-address ":9001" /data
     networks:
       - cinemaroom
+  
+  buggregator:
+    image: ghcr.io/buggregator/server:dev
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${BUGGREGATOR_PORT:-8000}:8000
+    expose:
+      - 8000
+      - 1025
+      - 9912
+      - 9913
+    networks:
+      - cinemaroom
+
 
 networks:
   cinemaroom:
