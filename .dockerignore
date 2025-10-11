@@ -69,6 +69,9 @@
 !services/chat-authz/psalm.xml
 !services/chat-authz/psalm-baseline.xml
 
+# Postgres
+!.docker/postgres
+
 # But
 **/*~
 **/*.log

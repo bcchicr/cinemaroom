@@ -150,10 +150,46 @@ services:
     tty: true
 #    entrypoint: entrypoint.sh
 
+  postgres:
+    build:
+      context: ./
+      dockerfile: ./.docker/postgres/Dockerfile
+      args:
+        - POSTGRES_VERSION
+        - ALPINE_VERSION
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+
+      AUTHN_PG_USER: ${AUTHN_PG_USER:?}
+      AUTHN_PG_PASSWORD: ${AUTHN_PG_PASSWORD:?}
+      AUTHN_PG_DB: ${AUTHN_PG_DB:?}
+
+      USER_PG_USER: ${USER_PG_USER:?}
+      USER_PG_PASSWORD: ${USER_PG_PASSWORD:?}
+      USER_PG_DB: ${USER_PG_DB:?}
+
+      CHAT_PG_USER: ${CHAT_PG_USER:?}
+      CHAT_PG_PASSWORD: ${CHAT_PG_PASSWORD:?}
+      CHAT_PG_DB: ${CHAT_PG_DB:?}
+
+      PLAYLIST_PG_USER: ${PLAYLIST_PG_USER:?}
+      PLAYLIST_PG_PASSWORD: ${PLAYLIST_PG_PASSWORD:?}
+      PLAYLIST_PG_DB: ${PLAYLIST_PG_DB:?}
+
+      CHAT_AUTHZ_PG_USER: ${CHAT_AUTHZ_PG_USER:?}
+      CHAT_AUTHZ_PG_PASSWORD: ${CHAT_AUTHZ_PG_PASSWORD:?}
+      CHAT_AUTHZ_PG_DB: ${CHAT_AUTHZ_PG_DB:?}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432
+
 networks:
   cinemaroom:
     name: cinemaroom
 
 volumes:
   go-mod-cache:
+  postgres-data:
     

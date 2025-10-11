@@ -39,18 +39,18 @@ restart-backend: \
 	down-backend \
 	up-backend
 up-backend:
-	docker-compose up -d gateway user authn chat playlist chat-authz
+	docker-compose up -d gateway user authn chat playlist chat-authz postgres
 down-backend:
-	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz
+	docker-compose down --remove-orphans gateway user authn chat playlist chat-authz postgres
 down-clear-backend:
-	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz
+	docker-compose down --remove-orphans --volumes gateway user authn chat playlist chat-authz postgres
 
 docker-pull-backend:
-	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz
+	docker-compose pull --ignore-pull-failures gateway user authn chat playlist chat-authz postgres
 docker-build-backend:
-	docker-compose build --pull gateway user authn chat playlist chat-authz
+	docker-compose build --pull gateway user authn chat playlist chat-authz postgres
 docker-build-backend-current-user:
-	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull gateway user authn chat playlist chat-authz postgres
 
 # Gateway
 init-gw: \
@@ -276,3 +276,32 @@ docker-build-chat-authz:
 	docker-compose build --pull chat-authz
 docker-build-chat-authz-current-user:
 	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull chat-authz
+
+# Postgres
+init-postgres: \
+	down-clear-postgres \
+	docker-pull-postgres \
+	docker-build-postgres
+
+init-postgres-cu:\
+    down-clear-postgres \
+    docker-pull-postgres \
+	docker-build-postgres-current-user
+
+restart-postgres: \
+	down-postgres \
+	up-postgres
+
+up-postgres:
+	docker-compose up -d postgres
+down-postgres:
+	docker-compose down --remove-orphans postgres
+down-clear-postgres:
+	docker-compose down --remove-orphans --volumes postgres
+
+docker-pull-postgres:
+	docker-compose pull --ignore-pull-failures postgres
+docker-build-postgres:
+	docker-compose build --pull postgres
+docker-build-chat-authz-postgres:
+	docker-compose build --build-arg UID=$$(id -u) --build-arg GID=$$(id -g) --pull postgres
