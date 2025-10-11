@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package cinemaroom.user.v1.service;
+
+option php_namespace = "GRPC\\Services\\Users\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Users\\v1";
+
+import "cinemaroom/user/v1/request.proto";
+import "cinemaroom/user/v1/response.proto";
+
+service UserService {
+    rpc Register (user.v1.request.RegisterRequest) returns (user.v1.response.RegisterResponse);
+    rpc Get (user.v1.request.GetRequest) returns (user.v1.response.GetResponse);
+    rpc Edit (user.v1.request.EditRequest) returns (user.v1.response.EditResponse);
+}

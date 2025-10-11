@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package cinemaroom.user.v1.response;
+
+option php_namespace = "GRPC\\Services\\Users\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Users\\v1";
+
+import "cinemaroom/user/v1/message.proto";
+
+message RegisterResponse {
+  user.v1.message.User user = 1;
+}
+
+message GetResponse {
+  user.v1.message.User user = 1;
+}
+
+message EditResponse {
+  user.v1.message.User user = 1;
+}

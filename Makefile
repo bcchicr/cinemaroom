@@ -122,7 +122,7 @@ down-clear-user:
 
 protoc-user:
 	docker-compose exec user sh -c 'protoc \
-		--plugin=protoc-gen-grpc=/usr/bin/protoc-gen-php-grpc \
+		--plugin=protoc-gen-grpc=/usr/local/bin/protoc-gen-php-grpc \
 		--php_out=/app/generated \
 		--grpc_out=/app/generated \
 		--proto_path=/lib/proto \
