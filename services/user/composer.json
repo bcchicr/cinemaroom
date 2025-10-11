@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "baldinof/roadrunner-bundle": "^3.2",
         "grpc/grpc": "^1.74",
+        "sentry/sentry-symfony": "^5.6",
         "spiral/roadrunner-grpc": "^3.5",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
@@ -16,6 +17,10 @@
         "symfony/framework-bundle": "7.3.*",
         "symfony/runtime": "7.3.*",
         "symfony/yaml": "7.3.*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "buggregator/trap": "^1.13"
     },
     "config": {
         "allow-plugins": {
@@ -49,8 +54,7 @@
     },
     "scripts": {
         "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "cache:clear": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
