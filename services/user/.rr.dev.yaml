@@ -8,6 +8,11 @@ server:
   env:
     - APP_RUNTIME: Baldinof\RoadRunnerBundle\Runtime\Runtime
 
+grpc:
+  pool:
+    debug: true
+    num_workers: 1
+
 logs:
   mode: development
   channels:

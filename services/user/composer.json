@@ -8,7 +8,12 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "baldinof/roadrunner-bundle": "^3.2",
+        "doctrine/dbal": "^3",
+        "doctrine/doctrine-bundle": "^2.18",
+        "doctrine/doctrine-migrations-bundle": "^3.4",
+        "doctrine/orm": "^3.5",
         "grpc/grpc": "^1.74",
+        "ramsey/uuid": "^4.9",
         "sentry/sentry-symfony": "^5.6",
         "spiral/roadrunner-grpc": "^3.5",
         "symfony/console": "7.3.*",
@@ -19,8 +24,10 @@
         "symfony/yaml": "7.3.*"
     },
     "require-dev": {
+        "buggregator/trap": "^1.13",
+        "friendsofphp/php-cs-fixer": "^3.88",
         "roave/security-advisories": "dev-latest",
-        "buggregator/trap": "^1.13"
+        "symfony/maker-bundle": "^1.64"
     },
     "config": {
         "allow-plugins": {

@@ -19,7 +19,7 @@ services:
       - ./services/gateway:/app
       - ./lib/proto:/lib/proto
     ports:
-      - ${NETWORK_INTERFACE:-127.0.0.1}:${GATEWAY_PORT:-8000}:9501
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${GATEWAY_PORT:-8001}:9501
     networks:
       - cinemaroom
     env_file: ./lib/.common.env
@@ -44,7 +44,7 @@ services:
       - ./services/user:/app
       - ./lib/proto:/lib/proto
     ports:
-      - ${NETWORK_INTERFACE:-127.0.0.1}:${USER_SERVICE_PORT:-8002}:8080
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${USER_SERVICE_PORT:-8002}:9001
     networks:
       - cinemaroom
     env_file: ./lib/.common.env
