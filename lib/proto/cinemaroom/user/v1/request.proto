@@ -5,16 +5,20 @@ package cinemaroom.user.v1.request;
 option php_namespace = "GRPC\\Services\\Users\\v1";
 option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Users\\v1";
 
+import "cinemaroom/common/v1/message.proto";
+import "cinemaroom/user/v1/message.proto";
+
 message RegisterRequest {
   string username = 1;
 }
 
 message GetRequest {
-  string id = 1;
+  common.v1.message.Uuid id = 1;
 }
 
 message EditRequest {
-  optional string username = 1;
-  optional string avatar = 2;
-  optional string bio = 3;
+  common.v1.message.Uuid id = 1;
+  optional string username = 2;
+  optional user.v1.message.Avatar avatar = 3;
+  optional string bio = 4;
 }

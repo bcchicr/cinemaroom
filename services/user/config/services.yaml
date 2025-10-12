@@ -18,3 +18,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Domain\Repositories\UserRepository:
+        alias: App\Infrastructure\Persistence\Repositories\UserRepository\DoctrineUserRepository
+    App\Application\QueryHandlers\UserQueryHandler\GetUserQueryHandler:
+        alias: App\Infrastructure\QueryHandlers\UserQueryHandler\GetUserQueryHandler\DoctrineGetUserQueryHandler
+    App\Domain\Events\EventDispatcher:
+        alias: App\Infrastructure\EventDispatchers\CompositeEventDispatcher

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package cinemaroom.common.v1.message;
+
+option php_namespace = "GRPC\\Services\\Common\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Common\\v1";
+
+message Uuid {
+  string value = 1;
+}
