@@ -18,14 +18,11 @@ final readonly class UserMapper
             (new Uuid())->setValue($user->id->toString()),
         );
         $grpcUser->setUsername($user->username);
+        $grpcUser->setBio($user->bio);
 
-        if (null !== $user->bio) {
-            $grpcUser->setBio($user->bio);
-        }
-
-        if (null !== $user->avatarPath) {
+        if (null !== $user->avatar) {
             $grpcUser->setAvatar(
-                (new Avatar())->setPath($user->avatarPath),
+                (new Avatar())->setPath($user->avatar->avatarPath),
             );
         }
 

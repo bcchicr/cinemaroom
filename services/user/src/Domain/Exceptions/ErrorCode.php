@@ -6,4 +6,5 @@ namespace App\Domain\Exceptions;
 
 enum ErrorCode: string
 {
+    case FailedInvariant = 'FAILED_INVARIANT';
 }

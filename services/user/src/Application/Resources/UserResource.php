@@ -11,8 +11,8 @@ final readonly class UserResource
     public function __construct(
         public UuidInterface $id,
         public string $username,
-        public ?string $bio,
-        public ?string $avatarPath,
+        public string $bio,
+        public ?AvatarResource $avatar,
     ) {
     }
 }

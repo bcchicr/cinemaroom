@@ -1,14 +1,14 @@
 version: "3"
 
-include:
-  - .rr-grpc.yaml
-
 server:
   command: "php public/index.php"
   env:
     - APP_RUNTIME: Baldinof\RoadRunnerBundle\Runtime\Runtime
 
 grpc:
+  listen: "tcp://0.0.0.0:9001"
+  proto:
+    - "/lib/proto/cinemaroom/user/v1/service.proto"
   pool:
     debug: true
     num_workers: 1
