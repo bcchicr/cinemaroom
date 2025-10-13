@@ -1,0 +1,50 @@
+monolog:
+    channels:
+        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "php://stderr"
+                level: debug
+                formatter: monolog.formatter.line
+            deprecation:
+                type: stream
+                path: "php://stderr"
+                level: warning
+                channels: [ "deprecation" ]
+                formatter: monolog.formatter.line
+
+when@prod:
+    monolog:
+        handlers:
+            deduplicated:
+                type: deduplicate
+                handler: fingers_crossed
+            fingers_crossed:
+                type: fingers_crossed
+                action_level: error
+                passthru_level: warning
+                handler: nested
+                channels: [ "!doctrine", "!event", "!deprecation" ]
+            nested:
+                type: stream
+                path: "php://stderr"
+                level: info
+                formatter: monolog.formatter.json
+            deprecation:
+                type: null
+                channels: [ "deprecation" ]
+
+when@test:
+    monolog:
+        handlers:
+            test:
+                type: test
+                level: debug
+                formatter: monolog.formatter.line
+            deprecation:
+                type: null
+                channels: [ "deprecation" ]
