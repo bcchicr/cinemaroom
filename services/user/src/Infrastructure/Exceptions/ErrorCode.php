@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Exceptions;
 
-enum ErrorCode: string{
-
+enum ErrorCode: string
+{
 }

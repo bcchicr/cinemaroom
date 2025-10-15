@@ -8,10 +8,8 @@ use App\Application\CommandHandlers\UserCommandHandler\EditUserCommandHandler\Ed
 use App\Application\CommandHandlers\UserCommandHandler\EditUserCommandHandler\EditUserCommandHandler;
 use App\Application\CommandHandlers\UserCommandHandler\RegisterUserCommandHandler\RegisterUserCommand;
 use App\Application\CommandHandlers\UserCommandHandler\RegisterUserCommandHandler\RegisterUserCommandHandler;
-use App\Application\Exceptions\NotFoundException;
 use App\Application\QueryHandlers\UserQueryHandler\GetUserQueryHandler\GetUserQuery;
 use App\Application\QueryHandlers\UserQueryHandler\GetUserQueryHandler\GetUserQueryHandler;
-use App\Domain\Exceptions\FailedInvariantException;
 use App\Endpoints\Grpc\Mappers\UserMapper;
 use GRPC\Services\Users\v1\EditRequest;
 use GRPC\Services\Users\v1\EditResponse;
