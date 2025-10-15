@@ -18,6 +18,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    monolog.processor.web:
+        class: Monolog\Processor\WebProcessor
+        tags: [ monolog.processor ]
 
     App\Domain\Repositories\UserRepository:
         alias: App\Infrastructure\Persistence\Repositories\UserRepository\DoctrineUserRepository

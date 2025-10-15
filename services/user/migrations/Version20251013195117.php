@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20251012115944 extends AbstractMigration
+final class Version20251013195117 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,7 @@ final class Version20251012115944 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE users (id VARCHAR(36) NOT NULL, username VARCHAR(255) NOT NULL, bio TEXT DEFAULT NULL, avatar_path VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE users (id VARCHAR(36) NOT NULL, username VARCHAR(255) NOT NULL, bio TEXT NOT NULL, avatar_path VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN users.id IS \'(DC2Type:user_id)\'');
     }
 

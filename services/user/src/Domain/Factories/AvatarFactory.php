@@ -10,7 +10,7 @@ final readonly class AvatarFactory
 {
     public function create(
         string $path,
-    ) {
+    ): Avatar {
         return new Avatar($path);
     }
 }

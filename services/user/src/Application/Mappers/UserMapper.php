@@ -11,12 +11,16 @@ final readonly class UserMapper
 {
     public static function toResource(User $user): UserResource
     {
+        $avatar = null;
+        if (null !== $user->avatar()) {
+            $avatar = AvatarMapper::toResource($user->avatar());
+        }
 
         return new UserResource(
             id: $user->id()->value(),
             username: $user->username(),
             bio: $user->bio(),
-            avatarPath: $user->avatar()?->path(),
+            avatar: $avatar,
         );
     }
 }

@@ -7,6 +7,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-grpc": "*",
         "baldinof/roadrunner-bundle": "^3.2",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.18",
@@ -20,6 +21,7 @@
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/monolog-bundle": "^3.10",
         "symfony/runtime": "7.3.*",
         "symfony/yaml": "7.3.*"
     },

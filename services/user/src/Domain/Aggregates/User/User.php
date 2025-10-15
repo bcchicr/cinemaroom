@@ -9,6 +9,7 @@ use App\Domain\Events\UserAvatarChanged;
 use App\Domain\Events\UserBioChanged;
 use App\Domain\Events\UserRegistered;
 use App\Domain\Events\UserUsernameChanged;
+use App\Domain\Exceptions\FailedInvariantException;
 use App\Domain\ValueObjects\Avatar;
 use App\Domain\ValueObjects\UserId;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,16 +24,16 @@ final class User extends AggregateRoot
     protected UserId $id;
     #[ORM\Column(type: 'string', length: 255)]
     private string $username;
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $bio;
+    #[ORM\Column(type: 'text')]
+    private string $bio;
     #[ORM\Embedded(class: Avatar::class, columnPrefix: 'avatar_')]
-    private ?Avatar $avatar;
+    private Avatar $avatar;
 
     private function __construct(
         UserId $id,
         string $username,
-        ?string $bio,
         ?Avatar $avatar,
+        string $bio,
     ) {
         $this->setId($id);
         $this->setUsername($username);
@@ -47,16 +48,22 @@ final class User extends AggregateRoot
 
     public function setUsername(string $username): void
     {
+        if (mb_strlen($username) > 255) {
+            throw new FailedInvariantException('Username cannot be longer than 255 characters');
+        }
         $this->username = $username;
     }
 
-    public function setBio(?string $bio): void
+    public function setBio(string $bio): void
     {
         $this->bio = $bio;
     }
 
     public function setAvatar(?Avatar $avatar): void
     {
+        if (null === $avatar) {
+            $avatar = new Avatar(null);
+        }
         $this->avatar = $avatar;
     }
 
@@ -64,20 +71,30 @@ final class User extends AggregateRoot
         UserId $id,
         string $username,
         ?string $bio,
-        ?Avatar $avatar,
-    ) {
-        return new self(id: $id, username: $username, bio: $bio, avatar: $avatar);
+        Avatar $avatar,
+    ): self {
+        return new self(
+            id: $id,
+            username: $username,
+            avatar: $avatar,
+            bio: $bio,
+        );
     }
 
     public static function register(
         UserId $id,
         string $username,
     ): self {
-        $user = new self(id: $id, username: $username, bio: null, avatar: null);
+        $user = new self(
+            id: $id,
+            username: $username,
+            avatar: null,
+            bio: '',
+        );
         $user->record(new UserRegistered(
             id: $id,
             username: $username,
-            bio: null,
+            bio: '',
             avatar: null,
         ));
 
@@ -94,13 +111,17 @@ final class User extends AggregateRoot
         return $this->username;
     }
 
-    public function bio(): ?string
+    public function bio(): string
     {
         return $this->bio;
     }
 
     public function avatar(): ?Avatar
     {
+        if ($this->avatar->isNull()) {
+            return null;
+        }
+
         return $this->avatar;
     }
 

@@ -11,7 +11,7 @@ message User {
   common.v1.message.Uuid id = 1;
   string username = 2;
   optional Avatar avatar = 3;
-  optional string bio = 4;
+  string bio = 4;
 }
 
 message Avatar {

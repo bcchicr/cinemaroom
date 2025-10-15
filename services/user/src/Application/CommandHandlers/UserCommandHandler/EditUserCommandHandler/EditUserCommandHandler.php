@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\CommandHandlers\UserCommandHandler\EditUserCommandHandler;
 
+use App\Application\Exceptions\NotFoundException;
 use App\Application\Mappers\UserMapper;
 use App\Application\Resources\UserResource;
 use App\Domain\Events\EventDispatcher;
@@ -24,7 +25,7 @@ final readonly class EditUserCommandHandler
     {
         $user = $this->userRepository->findById(new UserId($command->id));
         if (null === $user) {
-            throw new \RuntimeException('User not found');
+            throw new NotFoundException('User not found');
         }
 
         if (null !== $command->username) {

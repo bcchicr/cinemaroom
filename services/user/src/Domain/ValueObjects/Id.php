@@ -19,7 +19,8 @@ abstract class Id extends ValueObject
 
     public function equals(ValueObject $other): bool
     {
-        return $this->value->equals($other->value());
+        return $other instanceof static
+            && $this->value->equals($other->value);
     }
 
     public function value(): UuidInterface
@@ -29,7 +30,7 @@ abstract class Id extends ValueObject
 
     public function hash(): string
     {
-        return md5($this->value->toString());
+        return md5($this->toString());
     }
 
     public function toString(): string
@@ -39,7 +40,7 @@ abstract class Id extends ValueObject
 
     public function __toString(): string
     {
-        return $this->value->toString();
+        return $this->toString();
     }
 
     public function jsonSerialize(): array

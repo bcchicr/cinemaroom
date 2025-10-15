@@ -10,7 +10,9 @@ baldinof_road_runner:
             - Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
             - Symfony\Component\Serializer\Exception\ExceptionInterface
             - Symfony\Contracts\HttpClient\Exception\ExceptionInterface
-
+            - Spiral\RoadRunner\GRPC\Exception\GRPCException
+    interceptors:
+        - App\Endpoints\Grpc\Interceptors\ErrorHandlerInterceptor
     # Allow to send prometheus metrics to the main RoadRunner process,
     # via a `Spiral\RoadRunner\MetricsInterface` service.
     # See https://github.com/baldinof/roadrunner-bundle#metrics
