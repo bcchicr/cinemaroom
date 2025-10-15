@@ -8,3 +8,7 @@ option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Common\\v1";
 message Uuid {
   string value = 1;
 }
+
+message CustomErrorDetails {
+  string code = 1;
+}

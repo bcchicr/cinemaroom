@@ -1,0 +1,77 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Endpoints\Grpc\Interceptors;
+
+use App\Application\Exceptions\ApplicationException;
+use App\Domain\Exceptions\DomainException;
+use App\Endpoints\Exceptions\EndpointsException;
+use App\Infrastructure\Attributes\GrpcStatusProvider\GrpcStatus;
+use App\Infrastructure\Exceptions\InfrastructureException;
+use Baldinof\RoadRunnerBundle\Grpc\InterceptorInterface;
+use Baldinof\RoadRunnerBundle\RoadRunnerBridge\GrpcRequest;
+use Baldinof\RoadRunnerBundle\RoadRunnerBridge\GrpcRequestInvokerInterface;
+use Google\Protobuf\Any;
+use Google\Rpc\Code;
+use GRPC\Services\Common\v1\CustomErrorDetails;
+use Spiral\RoadRunner\GRPC\Exception\GRPCException;
+use Spiral\RoadRunner\GRPC\ResponseHeaders;
+
+use const Grpc\STATUS_INTERNAL;
+
+final readonly class ErrorHandlerInterceptor implements InterceptorInterface
+{
+    private const string STATUS_CODE_PREFIX = 'cinemaroom_users_';
+
+    public function intercept(GrpcRequest $invocation, GrpcRequestInvokerInterface $next): \Iterator
+    {
+        try {
+            yield $next->invoke($invocation);
+        } catch (\Throwable $exception) {
+            $grpcErrorCode = $this->getGrpcErrorCode($exception);
+            $customErrorCode = $this->getCustomErrorCode($exception);
+
+            $details = new CustomErrorDetails();
+            $details->setCode($customErrorCode);
+
+            $any = new Any();
+            $any->pack($details);
+
+            throw new GRPCException($exception->getMessage(), $grpcErrorCode, [$any], $exception);
+        }
+    }
+
+    public function getGrpcErrorCode(\Throwable $e): int
+    {
+        $reflection = new \ReflectionClass($e);
+        $attributes = $reflection->getAttributes(GrpcStatus::class);
+        if (!empty($attributes)) {
+            $grpcStatus = $attributes[0]->newInstance();
+            assert($grpcStatus instanceof GrpcStatus);
+            return $grpcStatus->code;
+        }
+
+        return STATUS_INTERNAL;
+    }
+
+    private function getCustomErrorCode(\Throwable $e): string
+    {
+        if ($e instanceof DomainException) {
+            return self::STATUS_CODE_PREFIX . 'domain_' . $e->getConventionalCode()->value;
+        }
+
+        if ($e instanceof ApplicationException) {
+            return self::STATUS_CODE_PREFIX . 'application_' . $e->getConventionalCode()->value;
+        }
+
+        if ($e instanceof InfrastructureException) {
+            return self::STATUS_CODE_PREFIX . 'infrastructure_' . $e->getConventionalCode()->value;
+        }
+
+        if ($e instanceof EndpointsException) {
+            return self::STATUS_CODE_PREFIX . 'endpoints_' . $e->getConventionalCode()->value;
+        }
+        return self::STATUS_CODE_PREFIX . 'unknown';
+    }
+}
