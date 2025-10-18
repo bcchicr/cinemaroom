@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 
 final class UserMapperTest extends TestCase
 {
-    public function test_map_user_resource_with_avatar_to_grpc_user(): void
+    public function testMapUserResourceWithAvatarToGrpcUser(): void
     {
         $avatar = $this->createMock(AvatarResource::class);
         $avatar->method('path')->willReturn('/path/to/avatar.jpg');
@@ -34,7 +34,7 @@ final class UserMapperTest extends TestCase
         $this->assertEquals($userGrpc->getAvatar()->getPath(), $user->avatar()->path());
     }
 
-    public function test_map_user_resource_without_avatar_to_grpc_user(): void
+    public function testMapUserResourceWithoutAvatarToGrpcUser(): void
     {
         $user = $this->createMock(UserResource::class);
         $user->method('id')->willReturn(Uuid::uuid7());

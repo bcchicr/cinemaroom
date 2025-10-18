@@ -28,7 +28,8 @@ final readonly class UserService implements UserServiceInterface
         private EditUserCommandHandler $editUserCommandHandler,
         private GetUserQueryHandler $getUserQueryHandler,
         private UserMapper $userMapper,
-    ) {}
+    ) {
+    }
 
     public function Register(GRPC\ContextInterface $ctx, RegisterRequest $in): RegisterResponse
     {

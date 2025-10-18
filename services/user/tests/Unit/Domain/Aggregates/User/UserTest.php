@@ -13,6 +13,7 @@ use App\Domain\Exceptions\FailedInvariantException;
 use App\Domain\Exceptions\InvalidArgumentException;
 use App\Domain\ValueObjects\Avatar;
 use App\Domain\ValueObjects\UserId;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -41,8 +42,26 @@ final class UserTest extends TestCase
 
     public function testCannotRegisterWithLongUsername(): void
     {
-        $this->expectException(FailedInvariantException::class);
+        $this->expectException(InvalidArgumentException::class);
         User::register(new UserId(Uuid::uuid7()), str_repeat('a', 256));
+    }
+
+    #[DataProvider('empty_username_provider')]
+    public function testCannotRegisterWithEmptyUsername(string $username): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        User::register(new UserId(Uuid::uuid7()), $username);
+    }
+
+    public static function empty_username_provider(): array
+    {
+        return [
+            [''],
+            [' '],
+            ["\t"],
+            ["\n"],
+            ["\r"],
+        ];
     }
 
     public function testChangeUsername(): void
@@ -61,7 +80,7 @@ final class UserTest extends TestCase
 
     public function testCannotChangeLongUsername(): void
     {
-        $this->expectException(FailedInvariantException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->user->changeUsername(str_repeat('a', 256));
     }
 
@@ -93,7 +112,7 @@ final class UserTest extends TestCase
         $this->assertInstanceOf(UserAvatarChanged::class, $event);
     }
 
-    public function testCannotChangeAvatarToNull()
+    public function testCannotChangeAvatarToNull(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $newAvatar = Avatar::null();

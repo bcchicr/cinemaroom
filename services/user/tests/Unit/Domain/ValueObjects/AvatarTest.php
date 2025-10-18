@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Domain\ValueObjects;
 
 use App\Domain\Exceptions\FailedInvariantException;
+use App\Domain\Exceptions\InvalidArgumentException;
 use App\Domain\ValueObjects\Avatar;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -16,6 +17,9 @@ final class AvatarTest extends TestCase
         return [
             [''],
             [' '],
+            ["\t"],
+            ["\n"],
+            ["\r"],
         ];
     }
 
@@ -38,13 +42,13 @@ final class AvatarTest extends TestCase
     #[DataProvider('empty_string_provider')]
     public function testRejectsEmptyString(string $path): void
     {
-        $this->expectException(FailedInvariantException::class);
+        $this->expectException(InvalidArgumentException::class);
         Avatar::fromString($path);
     }
 
     public function testRejectsLongString(): void
     {
-        $this->expectException(FailedInvariantException::class);
+        $this->expectException(InvalidArgumentException::class);
         Avatar::fromString(str_repeat('a', 256));
     }
 

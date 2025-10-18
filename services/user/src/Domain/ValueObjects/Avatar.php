@@ -6,6 +6,7 @@ namespace App\Domain\ValueObjects;
 
 use App\Domain\Abstracts\ValueObject;
 use App\Domain\Exceptions\FailedInvariantException;
+use App\Domain\Exceptions\InvalidArgumentException;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Embeddable()]
@@ -30,11 +31,11 @@ final class Avatar extends ValueObject
 
         $path = trim($path);
         if (empty($path)) {
-            throw new FailedInvariantException('Path cannot be empty');
+            throw new InvalidArgumentException('Path cannot be empty');
         }
 
         if (mb_strlen($path) > 255) {
-            throw new FailedInvariantException('Path cannot be longer than 255 characters');
+            throw new InvalidArgumentException('Path cannot be longer than 255 characters');
         }
 
         $this->path = $path;

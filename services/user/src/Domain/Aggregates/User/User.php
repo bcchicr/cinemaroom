@@ -49,8 +49,13 @@ class User extends AggregateRoot
 
     public function setUsername(string $username): void
     {
+        $username = trim($username);
+        if (empty($username)) {
+            throw new InvalidArgumentException('Username cannot be empty');
+        }
+
         if (mb_strlen($username) > 255) {
-            throw new FailedInvariantException('Username cannot be longer than 255 characters');
+            throw new InvalidArgumentException('Username cannot be longer than 255 characters');
         }
         $this->username = $username;
     }
