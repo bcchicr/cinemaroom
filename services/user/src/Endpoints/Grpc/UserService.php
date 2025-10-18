@@ -27,6 +27,7 @@ final readonly class UserService implements UserServiceInterface
         private RegisterUserCommandHandler $registerUserCommandHandler,
         private EditUserCommandHandler $editUserCommandHandler,
         private GetUserQueryHandler $getUserQueryHandler,
+        private UserMapper $userMapper,
     ) {
     }
 
@@ -36,7 +37,7 @@ final readonly class UserService implements UserServiceInterface
         $user = $this->registerUserCommandHandler->handle($command);
 
         $response = new RegisterResponse();
-        $response->setUser(UserMapper::toGrpc($user));
+        $response->setUser($this->userMapper->toGrpc($user));
 
         return $response;
     }
@@ -48,7 +49,7 @@ final readonly class UserService implements UserServiceInterface
         $user = $this->getUserQueryHandler->handle($query);
 
         $response = new GetResponse();
-        $response->setUser(UserMapper::toGrpc($user));
+        $response->setUser($this->userMapper->toGrpc($user));
 
         return $response;
     }
@@ -79,7 +80,7 @@ final readonly class UserService implements UserServiceInterface
         $user = $this->editUserCommandHandler->handle($command);
 
         $response = new EditResponse();
-        $response->setUser(UserMapper::toGrpc($user));
+        $response->setUser($this->userMapper->toGrpc($user));
 
         return $response;
     }

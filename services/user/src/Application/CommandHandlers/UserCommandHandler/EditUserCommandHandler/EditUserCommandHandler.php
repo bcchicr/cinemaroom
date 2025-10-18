@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Application\CommandHandlers\UserCommandHandler\EditUserCommandHandler;
 
 use App\Application\Exceptions\NotFoundException;
-use App\Application\Mappers\UserMapper;
 use App\Application\Resources\UserResource;
 use App\Domain\Events\EventDispatcher;
-use App\Domain\Factories\AvatarFactory;
 use App\Domain\Repositories\UserRepository;
+use App\Domain\ValueObjects\Avatar;
 use App\Domain\ValueObjects\UserId;
 
 final readonly class EditUserCommandHandler
@@ -17,7 +16,6 @@ final readonly class EditUserCommandHandler
     public function __construct(
         private UserRepository $userRepository,
         private EventDispatcher $eventDispatcher,
-        private AvatarFactory $avatarFactory,
     ) {
     }
 
@@ -37,7 +35,7 @@ final readonly class EditUserCommandHandler
         }
 
         if (null !== $command->avatarPath) {
-            $newAvatar = $this->avatarFactory->create($command->avatarPath);
+            $newAvatar = Avatar::fromString($command->avatarPath);
             $user->changeAvatar($newAvatar);
         }
 
@@ -48,6 +46,6 @@ final readonly class EditUserCommandHandler
             $this->eventDispatcher->dispatch($event);
         }
 
-        return UserMapper::toResource($user);
+        return new UserResource($user);
     }
 }

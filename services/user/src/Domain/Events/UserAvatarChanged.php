@@ -11,7 +11,7 @@ final readonly class UserAvatarChanged extends DomainEvent
 {
     public function __construct(
         private UserId $id,
-        private ?Avatar $oldAvatar,
+        private Avatar $oldAvatar,
         private Avatar $newAvatar,
     ) {
         parent::__construct();
@@ -27,7 +27,7 @@ final readonly class UserAvatarChanged extends DomainEvent
         return $this->id;
     }
 
-    public function oldAvatar(): ?Avatar
+    public function oldAvatar(): Avatar
     {
         return $this->oldAvatar;
     }

@@ -11,4 +11,5 @@ message Uuid {
 
 message CustomErrorDetails {
   string code = 1;
+  string message = 2;
 }

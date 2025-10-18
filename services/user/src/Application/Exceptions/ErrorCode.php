@@ -6,5 +6,6 @@ namespace App\Application\Exceptions;
 
 enum ErrorCode: string
 {
-    case NotFound = 'NOT_FOUND';
+    case NotFound = 'not_found';
+    case InvalidArgument = 'invalid_argument';
 }

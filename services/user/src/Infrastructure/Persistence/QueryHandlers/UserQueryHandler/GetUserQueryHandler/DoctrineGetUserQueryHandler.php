@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\QueryHandlers\UserQueryHandler\GetUserQueryHandler;
 
 use App\Application\Exceptions\NotFoundException;
-use App\Application\Mappers\UserMapper;
 use App\Application\QueryHandlers\UserQueryHandler\GetUserQueryHandler\GetUserQuery;
 use App\Application\QueryHandlers\UserQueryHandler\GetUserQueryHandler\GetUserQueryHandler;
 use App\Application\Resources\UserResource;
@@ -29,6 +28,6 @@ final class DoctrineGetUserQueryHandler extends ServiceEntityRepository implemen
             throw new NotFoundException('User not found.');
         }
 
-        return UserMapper::toResource($user);
+        return new UserResource($user);
     }
 }
