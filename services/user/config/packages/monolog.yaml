@@ -41,7 +41,7 @@ when@prod:
 when@test:
     monolog:
         handlers:
-            test:
+            main:
                 type: test
                 level: debug
                 formatter: monolog.formatter.line

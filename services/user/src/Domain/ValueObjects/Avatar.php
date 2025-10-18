@@ -14,7 +14,7 @@ final class Avatar extends ValueObject
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $path;
 
-    public function __construct(
+    private function __construct(
         ?string $path,
     ) {
         $this->setPath($path);
@@ -22,20 +22,55 @@ final class Avatar extends ValueObject
 
     private function setPath(?string $path): void
     {
-        if (null !== $path && empty(trim($path))) {
+        if (null === $path) {
+            $this->path = null;
+
+            return;
+        }
+
+        $path = trim($path);
+        if (empty($path)) {
             throw new FailedInvariantException('Path cannot be empty');
         }
+
+        if (mb_strlen($path) > 255) {
+            throw new FailedInvariantException('Path cannot be longer than 255 characters');
+        }
+
         $this->path = $path;
     }
 
-    public function __toString(): string
+    public static function create(?string $path): self
     {
-        return $this->toString();
+        if (null === $path) {
+            return self::null();
+        }
+
+        return self::fromString($path);
+    }
+
+    public static function null(): self
+    {
+        return new self(null);
+    }
+
+    public static function fromString(string $path): self
+    {
+        return new self($path);
     }
 
     public function toString(): string
     {
-        return $this->path ?? '';
+        if ($this->isNull()) {
+            throw new FailedInvariantException('Path cannot be null');
+        }
+
+        return $this->path;
+    }
+
+    public function isNull(): bool
+    {
+        return null === $this->path;
     }
 
     public function equals(ValueObject $other): bool
@@ -51,21 +86,6 @@ final class Avatar extends ValueObject
         }
 
         return $this->path;
-    }
-
-    public function isNull(): bool
-    {
-        return null === $this->path;
-    }
-
-    public function hash(): string
-    {
-        return md5($this->toString());
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
     }
 
     public function toArray(): array

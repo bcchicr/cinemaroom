@@ -10,7 +10,7 @@ final readonly class UserBioChanged extends DomainEvent
 {
     public function __construct(
         private UserId $id,
-        private ?string $oldBio,
+        private string $oldBio,
         private string $newBio,
     ) {
         parent::__construct();

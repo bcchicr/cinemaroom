@@ -28,7 +28,10 @@
     "require-dev": {
         "buggregator/trap": "^1.13",
         "friendsofphp/php-cs-fixer": "^3.88",
+        "phpunit/phpunit": "^12.4",
         "roave/security-advisories": "dev-latest",
+        "symfony/browser-kit": "7.3.*",
+        "symfony/css-selector": "7.3.*",
         "symfony/maker-bundle": "^1.64"
     },
     "config": {

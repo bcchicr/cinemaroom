@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\CommandHandlers\UserCommandHandler\RegisterUserCommandHandler;
 
-use App\Application\Mappers\UserMapper;
 use App\Application\Resources\UserResource;
 use App\Domain\Aggregates\User\User;
 use App\Domain\Events\EventDispatcher;
@@ -33,6 +32,6 @@ final readonly class RegisterUserCommandHandler
             $this->eventDispatcher->dispatch($event);
         }
 
-        return UserMapper::toResource($user);
+        return new UserResource($user);
     }
 }

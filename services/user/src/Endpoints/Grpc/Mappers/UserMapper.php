@@ -11,18 +11,18 @@ use GRPC\Services\Users\v1\User;
 
 final readonly class UserMapper
 {
-    public static function toGrpc(UserResource $user): User
+    public function toGrpc(UserResource $user): User
     {
         $grpcUser = new User();
         $grpcUser->setId(
-            (new Uuid())->setValue($user->id->toString()),
+            (new Uuid())->setValue($user->id()->toString()),
         );
-        $grpcUser->setUsername($user->username);
-        $grpcUser->setBio($user->bio);
+        $grpcUser->setUsername($user->username());
+        $grpcUser->setBio($user->bio());
 
-        if (null !== $user->avatar) {
+        if (null !== $user->avatar()) {
             $grpcUser->setAvatar(
-                (new Avatar())->setPath($user->avatar->avatarPath),
+                (new Avatar())->setPath($user->avatar()->path()),
             );
         }
 

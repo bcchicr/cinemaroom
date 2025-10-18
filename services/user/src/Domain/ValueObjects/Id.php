@@ -28,30 +28,15 @@ abstract class Id extends ValueObject
         return $this->value;
     }
 
-    public function hash(): string
-    {
-        return md5($this->toString());
-    }
-
-    public function toString(): string
-    {
-        return $this->value->toString();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
-    }
-
     public function toArray(): array
     {
         return [
             'value' => $this->value->toString(),
         ];
+    }
+
+    public function toString(): string
+    {
+        return $this->value->toString();
     }
 }
