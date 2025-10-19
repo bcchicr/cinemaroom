@@ -2,6 +2,8 @@
 *
 
 # Except
+!lib
+
 # Gateway
 !.docker/gateway
 
@@ -17,15 +19,21 @@
 # User
 !.docker/user
 
+!services/user/generated/.gitignore
 !services/user/bin
 !services/user/config
 !services/user/src
+!services/user/.env
+!services/user/.env.test
 !services/user/.rr.dev.yaml
 !services/user/.rr.yaml
-!services/user/.rr-grpc.yaml
 !services/user/composer.json
 !services/user/composer.lock
 !services/user/symfony.lock
+!services/user/.php-cs-fixer.dist.php
+!services/user/phpunit.dist.xml
+!services/user/psalm.xml
+!services/user/psalm-baseline.xml
 
 # Authn
 !.docker/authn

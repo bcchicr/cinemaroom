@@ -12,12 +12,12 @@ use App\Infrastructure\Exceptions\InfrastructureException;
 use Baldinof\RoadRunnerBundle\Grpc\InterceptorInterface;
 use Baldinof\RoadRunnerBundle\RoadRunnerBridge\GrpcRequest;
 use Baldinof\RoadRunnerBundle\RoadRunnerBridge\GrpcRequestInvokerInterface;
-use Google\Protobuf\Any;
 use GRPC\Services\Common\v1\CustomErrorDetails;
-use Psr\Log\LoggerInterface;
-use Spiral\RoadRunner\GRPC\Exception\GRPCException;
 
 use const Grpc\STATUS_INTERNAL;
+
+use Psr\Log\LoggerInterface;
+use Spiral\RoadRunner\GRPC\Exception\GRPCException;
 
 final readonly class ErrorHandlerInterceptor implements InterceptorInterface
 {
@@ -25,7 +25,8 @@ final readonly class ErrorHandlerInterceptor implements InterceptorInterface
 
     public function __construct(
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function intercept(GrpcRequest $invocation, GrpcRequestInvokerInterface $next): \Iterator
@@ -75,21 +76,21 @@ final readonly class ErrorHandlerInterceptor implements InterceptorInterface
     private function getCustomErrorCode(\Throwable $e): string
     {
         if ($e instanceof DomainException) {
-            return self::STATUS_CODE_PREFIX . 'domain_' . $e->getConventionalCode()->value;
+            return self::STATUS_CODE_PREFIX.'domain_'.$e->getConventionalCode()->value;
         }
 
         if ($e instanceof ApplicationException) {
-            return self::STATUS_CODE_PREFIX . 'application_' . $e->getConventionalCode()->value;
+            return self::STATUS_CODE_PREFIX.'application_'.$e->getConventionalCode()->value;
         }
 
         if ($e instanceof InfrastructureException) {
-            return self::STATUS_CODE_PREFIX . 'infrastructure_' . $e->getConventionalCode()->value;
+            return self::STATUS_CODE_PREFIX.'infrastructure_'.$e->getConventionalCode()->value;
         }
 
         if ($e instanceof EndpointsException) {
-            return self::STATUS_CODE_PREFIX . 'endpoints_' . $e->getConventionalCode()->value;
+            return self::STATUS_CODE_PREFIX.'endpoints_'.$e->getConventionalCode()->value;
         }
 
-        return self::STATUS_CODE_PREFIX . 'unknown';
+        return self::STATUS_CODE_PREFIX.'unknown';
     }
 }

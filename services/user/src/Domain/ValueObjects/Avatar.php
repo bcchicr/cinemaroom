@@ -17,8 +17,7 @@ final class Avatar extends ValueObject
 
     private function __construct(
         ?string $path,
-    )
-    {
+    ) {
         $this->setPath($path);
     }
 

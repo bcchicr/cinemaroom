@@ -1,0 +1,202 @@
+services:
+  gateway:
+    profiles:
+      - app
+      - backend
+    build:
+      context: ./
+      dockerfile: ./.docker/gateway/Dockerfile
+      target: app_php_test
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - PROTOC_VERSION
+        - UID
+        - GID
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${GATEWAY_PORT:-8001}:9501
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    entrypoint: entrypoint.sh
+
+  user:
+    build:
+      context: ./
+      dockerfile: ./.docker/user/Dockerfile
+      target: app_php_test
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - ROADRUNNER_VERSION
+        - PROTOC_VERSION
+        - GOLANG_VERSION
+        - UID
+        - GID
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${USER_SERVICE_PORT:-8002}:9001
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    environment:
+      RR_CONFIG_FILE: ${USER_RR_CONFIG_FILE}
+    entrypoint: entrypoint.sh
+
+  authn:
+    build:
+      context: ./
+      dockerfile: ./.docker/authn/Dockerfile
+      target: app_go_test
+      args:
+        - GOLANG_VERSION
+        - ALPINE_VERSION
+        - PROTOC_VERSION
+        - UID
+        - GID
+    networks:
+      - cinemaroom
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${AUTHN_PORT:-8003}:8080
+    entrypoint: entrypoint.sh
+
+  chat:
+    build:
+      context: ./
+      dockerfile: ./.docker/chat/Dockerfile
+      target: app_php_composer
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - ROADRUNNER_VERSION
+        - PROTOC_VERSION
+        - GOLANG_VERSION
+        - UID
+        - GID
+
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${CHAT_SERVICE_PORT:-8003}:8080
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    tty: true
+  #    entrypoint: entrypoint.sh
+
+  playlist:
+    build:
+      context: ./
+      dockerfile: ./.docker/playlist/Dockerfile
+      target: app_php_composer
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - ROADRUNNER_VERSION
+        - PROTOC_VERSION
+        - GOLANG_VERSION
+        - UID
+        - GID
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${PLAYLIST_SERVICE_PORT:-8004}:8080
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    tty: true
+  #    entrypoint: entrypoint.sh
+
+  chat-authz:
+    build:
+      context: ./
+      dockerfile: ./.docker/chat-authz/Dockerfile
+      target: app_php_composer
+      args:
+        - ALPINE_VERSION
+        - PHP_VERSION
+        - COMPOSER_VERSION
+        - PHP_EXT_INSTALLER_VERSION
+        - ROADRUNNER_VERSION
+        - PROTOC_VERSION
+        - GOLANG_VERSION
+        - UID
+        - GID
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${CHAT_AUTHZ_SERVICE_PORT:-8005}:8080
+    networks:
+      - cinemaroom
+    env_file: ./lib/.common.env
+    tty: true
+  #    entrypoint: entrypoint.sh
+
+  postgres:
+    build:
+      context: ./
+      dockerfile: ./.docker/postgres/Dockerfile
+      args:
+        - POSTGRES_VERSION
+        - ALPINE_VERSION
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+
+      AUTHN_PG_USER: ${AUTHN_PG_USER:?}
+      AUTHN_PG_PASSWORD: ${AUTHN_PG_PASSWORD:?}
+      AUTHN_PG_DB: ${AUTHN_PG_DB:?}
+
+      USER_PG_USER: ${USER_PG_USER:?}
+      USER_PG_PASSWORD: ${USER_PG_PASSWORD:?}
+      USER_PG_DB: ${USER_PG_DB:?}
+
+      CHAT_PG_USER: ${CHAT_PG_USER:?}
+      CHAT_PG_PASSWORD: ${CHAT_PG_PASSWORD:?}
+      CHAT_PG_DB: ${CHAT_PG_DB:?}
+
+      PLAYLIST_PG_USER: ${PLAYLIST_PG_USER:?}
+      PLAYLIST_PG_PASSWORD: ${PLAYLIST_PG_PASSWORD:?}
+      PLAYLIST_PG_DB: ${PLAYLIST_PG_DB:?}
+
+      CHAT_AUTHZ_PG_USER: ${CHAT_AUTHZ_PG_USER:?}
+      CHAT_AUTHZ_PG_PASSWORD: ${CHAT_AUTHZ_PG_PASSWORD:?}
+      CHAT_AUTHZ_PG_DB: ${CHAT_AUTHZ_PG_DB:?}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432
+    networks:
+      - cinemaroom
+  
+  redis:
+    image: redis:${REDIS_VERSION}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${REDIS_PORT:-6379}:6379
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?}
+    entrypoint: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
+    networks:
+      - cinemaroom
+
+  rabbitmq:
+    image: rabbitmq:${RABBITMQ_VERSION}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${RABBITMQ_PORT:-5672}:5672
+    networks:
+      - cinemaroom
+
+  minio:
+    image: quay.io/minio/minio:${MINIO_VERSION}
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?}
+    ports:
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${MINIO_API_PORT:-9000}:9000
+      - ${NETWORK_INTERFACE:-127.0.0.1}:${MINIO_UI_PORT:-9001}:9001
+    command: server --console-address ":9001" /data
+    networks:
+      - cinemaroom
+
+networks:
+  cinemaroom:
+    name: cinemaroom

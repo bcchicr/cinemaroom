@@ -31,7 +31,54 @@ jobs:
             user: 'services/user/**'
             proto: 'lib/proto/**'
 
+  test-user:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.user-changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Copy envs
+        run: |
+          cp .env.example .env
+          echo "COMPOSE_FILE=compose.test.yml" >> .env
+
+      - name: Build images
+        run: |
+          make init-user
+          make init-postgres
+
+      - name: Run images
+        run: |
+          make up-user
+          make up-postgres
+
+      - name: Run static analysis
+        run: make stat-check-user
+
+      - name: Generate protobuf classes
+        run: make protoc-user
+
+      - name: Run tests
+        run: make test-user
+
+      - name: Run formatter
+        run: make fmt-user
+
+      - name: Commit formatting changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore(user): apply formatting'
+          file_pattern: 'services/user/**/*.php'
+
+
   test-all:
     runs-on: ubuntu-latest
+    needs: [ detect-changes, test-user ]
     steps:
       - run: echo "All selective tests completed successfully or skipped"
