@@ -67,11 +67,11 @@ jobs:
           make up-postgres
           make up-user
 
-      - name: Run static analysis
-        run: make stat-check-user
-
       - name: Generate protobuf classes
         run: make protoc-user
+
+      - name: Run static analysis
+        run: make stat-check-user
 
       - name: Run tests
         run: make test-user
