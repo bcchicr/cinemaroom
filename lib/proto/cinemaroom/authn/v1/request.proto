@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package cinemaroom.authn.v1.request;
+
+option php_namespace = "GRPC\\Services\\Authn\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Authn\\v1";
+
+import "cinemaroom/authn/v1/message.proto";
+
+message RegisterRequest {
+  string login = 1;
+  optional string email = 2;
+  string password = 3;
+}
+
+message LoginRequest {
+  oneof identifier {
+    string login = 1;
+    string email = 2;
+  }
+  string password = 3;
+}
+
+message LogoutRequest {
+  authn.v1.message.JwtToken jwt_token = 1;
+}
+
+message RefreshRequest {
+  authn.v1.message.RefreshToken refresh_token = 1;
+}
+
+message EditRequest {
+  optional string login = 1;
+  optional string email = 2;
+  optional string password = 3;
+}

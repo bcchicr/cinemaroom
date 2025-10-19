@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package cinemaroom.authn.v1.response;
+
+option php_namespace = "GRPC\\Services\\Authn\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Authn\\v1";
+
+import "cinemaroom/common/v1/message.proto";
+import "cinemaroom/authn/v1/message.proto";
+
+message RegisterResponse {
+  authn.v1.message.Tokens tokens = 1;
+}
+
+message LoginResponse {
+  authn.v1.message.Tokens tokens = 1;
+}
+
+message LogoutResponse {
+  common.v1.message.Uuid user_id = 1;
+}
+
+message RefreshResponse {
+  authn.v1.message.Tokens tokens = 1;
+}
+
+message EditResponse {
+  common.v1.message.Uuid user_id = 1;
+}
