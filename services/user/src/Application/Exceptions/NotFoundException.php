@@ -11,6 +11,7 @@ use const Grpc\STATUS_NOT_FOUND;
 #[GrpcStatus(code: STATUS_NOT_FOUND)]
 final class NotFoundException extends ApplicationException
 {
+    #[\Override]
     public function getConventionalCode(): ErrorCode
     {
         return ErrorCode::NotFound;

@@ -31,6 +31,7 @@ final readonly class UserService implements UserServiceInterface
     ) {
     }
 
+    #[\Override]
     public function Register(GRPC\ContextInterface $ctx, RegisterRequest $in): RegisterResponse
     {
         $command = new RegisterUserCommand($in->getUsername());
@@ -42,6 +43,7 @@ final readonly class UserService implements UserServiceInterface
         return $response;
     }
 
+    #[\Override]
     public function Get(GRPC\ContextInterface $ctx, GetRequest $in): GetResponse
     {
         $id = $in->getId()?->getValue() ?? '';
@@ -54,6 +56,7 @@ final readonly class UserService implements UserServiceInterface
         return $response;
     }
 
+    #[\Override]
     public function Edit(GRPC\ContextInterface $ctx, EditRequest $in): EditResponse
     {
         $username = null;

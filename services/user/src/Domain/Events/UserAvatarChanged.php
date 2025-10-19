@@ -17,6 +17,7 @@ final readonly class UserAvatarChanged extends DomainEvent
         parent::__construct();
     }
 
+    #[\Override]
     public function eventName(): string
     {
         return 'user.avatar_changed';

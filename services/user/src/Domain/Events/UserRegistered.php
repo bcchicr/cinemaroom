@@ -15,6 +15,7 @@ final readonly class UserRegistered extends DomainEvent
         parent::__construct();
     }
 
+    #[\Override]
     public function eventName(): string
     {
         return 'user.registered';

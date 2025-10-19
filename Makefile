@@ -120,6 +120,13 @@ down-user:
 down-clear-user:
 	docker-compose down --remove-orphans --volumes user
 
+stat-check-user:
+	docker-compose exec user ./vendor/bin/psalm
+
+fmt-user:
+	docker-compose run --user $(id -u):$(id -g) --entrypoint "" --rm -v $$(pwd)/services/user:/app user composer install
+	docker-compose run --user $(id -u):$(id -g) --entrypoint "" --rm -v $$(pwd)/services/user:/app user /app/vendor/bin/php-cs-fixer fix
+
 protoc-user:
 	docker-compose exec user sh -c 'protoc \
 		--plugin=protoc-gen-grpc=/usr/local/bin/protoc-gen-php-grpc \
@@ -127,6 +134,12 @@ protoc-user:
 		--grpc_out=/app/generated \
 		--proto_path=/lib/proto \
 		$$(find /lib/proto -name "*.proto")'
+
+migrate-user:
+	docker compose exec user ./bin/console doctrine:migrations:migrate -n
+
+test-user:
+	docker-compose exec user ./vendor/bin/phpunit
 
 docker-pull-user:
 	docker-compose pull --ignore-pull-failures user

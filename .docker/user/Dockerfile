@@ -93,4 +93,6 @@ RUN composer install
 
 COPY ./.docker/user/config/php.ini ${PHP_INI_DIR}/conf.d/
 
+COPY ./lib/proto /lib/proto
+
 USER ${UID}

@@ -17,14 +17,14 @@ use GRPC\Services\Users\v1\GetResponse;
 use GRPC\Services\Users\v1\RegisterRequest;
 use GRPC\Services\Users\v1\RegisterResponse;
 use GRPC\Services\Users\v1\UserServiceInterface;
-use Grpc\UnaryCall;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 
-use const Grpc\STATUS_INTERNAL;
 use const Grpc\STATUS_INVALID_ARGUMENT;
 use const Grpc\STATUS_NOT_FOUND;
 use const Grpc\STATUS_OK;
+
+use Grpc\UnaryCall;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 final class UserServiceTest extends TestCase
 {
@@ -49,7 +49,7 @@ final class UserServiceTest extends TestCase
 
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Register',
+            UserServiceInterface::NAME.'/Register',
             [RegisterResponse::class, 'mergeFromString'],
         );
 
@@ -74,7 +74,7 @@ final class UserServiceTest extends TestCase
     {
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Register',
+            UserServiceInterface::NAME.'/Register',
             [RegisterResponse::class, 'mergeFromString'],
         );
 
@@ -110,6 +110,7 @@ final class UserServiceTest extends TestCase
 
         $errorDetails = $any->unpack();
         assert($errorDetails instanceof CustomErrorDetails);
+
         return $errorDetails;
     }
 
@@ -117,7 +118,7 @@ final class UserServiceTest extends TestCase
     {
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Register',
+            UserServiceInterface::NAME.'/Register',
             [RegisterResponse::class, 'mergeFromString'],
         );
 
@@ -132,7 +133,7 @@ final class UserServiceTest extends TestCase
 
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Get',
+            UserServiceInterface::NAME.'/Get',
             [GetResponse::class, 'mergeFromString'],
         );
         $request = new GetRequest();
@@ -155,7 +156,7 @@ final class UserServiceTest extends TestCase
 
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Get',
+            UserServiceInterface::NAME.'/Get',
             [GetResponse::class, 'mergeFromString'],
         );
         $request = new GetRequest();
@@ -164,7 +165,7 @@ final class UserServiceTest extends TestCase
         [$response, $status] = $call->wait();
 
         $this->assertEquals(STATUS_NOT_FOUND, $status->code);
-        $this->assertNull( $response);
+        $this->assertNull($response);
 
         $errorDetails = $this->unpackErrorDetails($status);
         $this->assertStringStartsWith(self::ERROR_CODE_PREFIX, $errorDetails->getCode());
@@ -174,13 +175,13 @@ final class UserServiceTest extends TestCase
     {
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Register',
+            UserServiceInterface::NAME.'/Register',
             [RegisterResponse::class, 'mergeFromString'],
         );
 
         $oldUsername = 'test_user';
         $request = new RegisterRequest();
-        $request->setUsername($oldUsername);;
+        $request->setUsername($oldUsername);
 
         $call->start($request);
         [$response, $status] = $call->wait();
@@ -190,7 +191,7 @@ final class UserServiceTest extends TestCase
 
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Edit',
+            UserServiceInterface::NAME.'/Edit',
             [EditResponse::class, 'mergeFromString'],
         );
 
@@ -222,7 +223,7 @@ final class UserServiceTest extends TestCase
     {
         $call = new UnaryCall(
             $this->channel,
-            UserServiceInterface::NAME . '/Edit',
+            UserServiceInterface::NAME.'/Edit',
             [EditResponse::class, 'mergeFromString'],
         );
 
@@ -239,11 +240,10 @@ final class UserServiceTest extends TestCase
         [$response, $status] = $call->wait();
 
         $this->assertEquals(STATUS_NOT_FOUND, $status->code);
-        $this->assertNull( $response);
+        $this->assertNull($response);
 
         $errorDetails = $this->unpackErrorDetails($status);
         $this->assertStringStartsWith(self::ERROR_CODE_PREFIX, $errorDetails->getCode());
-
     }
 
     protected function setUp(): void

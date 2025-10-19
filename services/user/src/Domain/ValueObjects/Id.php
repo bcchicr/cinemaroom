@@ -17,6 +17,7 @@ abstract class Id extends ValueObject
         $this->value = $value;
     }
 
+    #[\Override]
     public function equals(ValueObject $other): bool
     {
         return $other instanceof static
@@ -28,6 +29,7 @@ abstract class Id extends ValueObject
         return $this->value;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [
@@ -35,6 +37,7 @@ abstract class Id extends ValueObject
         ];
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->value->toString();

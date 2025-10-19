@@ -60,6 +60,7 @@ final class Avatar extends ValueObject
         return new self($path);
     }
 
+    #[\Override]
     public function toString(): string
     {
         if ($this->isNull()) {
@@ -74,6 +75,7 @@ final class Avatar extends ValueObject
         return null === $this->path;
     }
 
+    #[\Override]
     public function equals(ValueObject $other): bool
     {
         return $other instanceof self
@@ -85,10 +87,12 @@ final class Avatar extends ValueObject
         if ($this->isNull()) {
             throw new FailedInvariantException('Path cannot be null');
         }
+        assert(null !== $this->path);
 
         return $this->path;
     }
 
+    #[\Override]
     public function toArray(): array
     {
         return [

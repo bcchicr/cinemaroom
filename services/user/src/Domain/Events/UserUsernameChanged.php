@@ -16,6 +16,7 @@ final readonly class UserUsernameChanged extends DomainEvent
         parent::__construct();
     }
 
+    #[\Override]
     public function eventName(): string
     {
         return 'user.username_changed';

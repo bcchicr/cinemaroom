@@ -15,6 +15,7 @@ final readonly class CompositeEventDispatcher implements EventDispatcher
     ) {
     }
 
+    #[\Override]
     public function dispatch(DomainEvent $event): void
     {
         $this->syncEventDispatcher->dispatch($event);

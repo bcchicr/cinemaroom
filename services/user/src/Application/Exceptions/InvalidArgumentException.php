@@ -11,6 +11,7 @@ use const Grpc\STATUS_INVALID_ARGUMENT;
 #[GrpcStatus(code: STATUS_INVALID_ARGUMENT)]
 final class InvalidArgumentException extends ApplicationException
 {
+    #[\Override]
     public function getConventionalCode(): ErrorCode
     {
         return ErrorCode::InvalidArgument;
