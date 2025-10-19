@@ -9,6 +9,10 @@ use App\Domain\Events\UserAvatarChanged;
 use App\Domain\Events\UserBioChanged;
 use App\Domain\Events\UserRegistered;
 use App\Domain\Events\UserUsernameChanged;
+
+
+
+use App\Domain\Exceptions\FailedInvariantException;
 use App\Domain\Exceptions\InvalidArgumentException;
 use App\Domain\ValueObjects\Avatar;
 use App\Domain\ValueObjects\UserId;
