@@ -54,6 +54,7 @@ jobs:
       - name: Copy envs
         run: |
           cp .env.example .env
+          echo "" >> .env
           echo "COMPOSE_FILE=compose.test.yml" >> .env
 
       - name: Build images
