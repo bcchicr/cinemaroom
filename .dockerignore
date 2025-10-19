@@ -23,6 +23,9 @@
 !services/user/bin
 !services/user/config
 !services/user/src
+!services/user/public
+!services/user/tests
+!services/user/migrations
 !services/user/.env
 !services/user/.env.test
 !services/user/.rr.dev.yaml

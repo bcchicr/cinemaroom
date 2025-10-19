@@ -134,6 +134,9 @@ protoc-user:
 		--proto_path=/lib/proto \
 		$$(find /lib/proto -name "*.proto")'
 
+migrate-user:
+	docker compose exec user ./bin/console doctrine:migrations:migrate -n
+
 test-user:
 	docker-compose exec user ./vendor/bin/phpunit
 
