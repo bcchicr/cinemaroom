@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2",
+        "php": "8.3.*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-grpc": "*",
@@ -29,12 +29,12 @@
         "buggregator/trap": "^1.13",
         "friendsofphp/php-cs-fixer": "^3.88",
         "phpunit/phpunit": "^12.4",
-        "psalm/plugin-symfony": "^5.2",
+        "psalm/plugin-symfony": "^5.2.7",
         "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",
         "symfony/maker-bundle": "^1.64",
-        "vimeo/psalm": "^6.13"
+        "vimeo/psalm": "^6.13.1"
     },
     "config": {
         "allow-plugins": {

@@ -11,6 +11,7 @@ use const Grpc\STATUS_FAILED_PRECONDITION;
 #[GrpcStatus(code: STATUS_FAILED_PRECONDITION)]
 final class FailedInvariantException extends DomainException
 {
+    #[\Override]
     public function getConventionalCode(): ErrorCode
     {
         return ErrorCode::FailedInvariant;

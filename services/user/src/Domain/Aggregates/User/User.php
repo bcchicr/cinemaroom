@@ -102,6 +102,7 @@ class User extends AggregateRoot
         return $user;
     }
 
+    #[\Override]
     public function id(): UserId
     {
         return $this->id;

@@ -15,6 +15,7 @@ abstract class ValueObject implements \Stringable, \JsonSerializable
 
     abstract public function toString(): string;
 
+    #[\Override]
     public function jsonSerialize(): array
     {
         return $this->toArray();
@@ -22,6 +23,7 @@ abstract class ValueObject implements \Stringable, \JsonSerializable
 
     abstract public function toArray(): array;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->toString();

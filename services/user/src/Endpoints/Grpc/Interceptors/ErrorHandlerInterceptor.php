@@ -27,6 +27,7 @@ final readonly class ErrorHandlerInterceptor implements InterceptorInterface
         private LoggerInterface $logger,
     ) {}
 
+    #[\Override]
     public function intercept(GrpcRequest $invocation, GrpcRequestInvokerInterface $next): \Iterator
     {
         $this->logger->info('gRPC method called', [

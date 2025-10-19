@@ -19,6 +19,7 @@ final class SyncEventDispatcher implements EventDispatcher
         $this->listeners[$eventName][] = $listener;
     }
 
+    #[\Override]
     public function dispatch(DomainEvent $event): void
     {
         $eventName = $event->eventName();

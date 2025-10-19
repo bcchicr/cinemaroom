@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+  <file src="src/Application/QueryHandlers/UserQueryHandler/GetUserQueryHandler/GetUserQuery.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Domain/Abstracts/Entity.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[equals]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Abstracts/ValueObject.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[hash]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Aggregates/User/User.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[hydrate]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Events/DomainEvent.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[occurredOn]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Events/UserAvatarChanged.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[id]]></code>
+      <code><![CDATA[newAvatar]]></code>
+      <code><![CDATA[oldAvatar]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Events/UserBioChanged.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[id]]></code>
+      <code><![CDATA[newBio]]></code>
+      <code><![CDATA[oldBio]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Events/UserRegistered.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[id]]></code>
+      <code><![CDATA[username]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/Events/UserUsernameChanged.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[id]]></code>
+      <code><![CDATA[newUsername]]></code>
+      <code><![CDATA[oldUsername]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Domain/ValueObjects/Avatar.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[create]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Endpoints/Grpc/Interceptors/ErrorHandlerInterceptor.php">
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$e->getConventionalCode()->value]]></code>
+      <code><![CDATA[$e->getConventionalCode()->value]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Infrastructure/EventDispatchers/SyncEventDispatcher.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addListener]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Infrastructure/Persistence/QueryHandlers/UserQueryHandler/GetUserQueryHandler/DoctrineGetUserQueryHandler.php">
+    <UnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </UnusedParam>
+  </file>
+  <file src="src/Infrastructure/Persistence/Repositories/UserRepository/DoctrineUserRepository.php">
+    <UnusedParam>
+      <code><![CDATA[$registry]]></code>
+    </UnusedParam>
+  </file>
+</files>

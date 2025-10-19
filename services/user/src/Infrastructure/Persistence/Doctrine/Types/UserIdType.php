@@ -13,21 +13,25 @@ final class UserIdType extends StringType
 {
     public const string NAME = 'user_id';
 
+    #[\Override]
     public function getName(): string
     {
         return self::NAME;
     }
 
+    #[\Override]
     public function convertToPHPValue($value, $platform): ?UserId
     {
         return null === $value ? null : new UserId(Uuid::fromString($value));
     }
 
+    #[\Override]
     public function convertToDatabaseValue($value, $platform): ?string
     {
         return $value instanceof UserId ? $value->toString() : null;
     }
 
+    #[\Override]
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;

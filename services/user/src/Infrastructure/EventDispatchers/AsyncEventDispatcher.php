@@ -9,6 +9,7 @@ use App\Domain\Events\EventDispatcher;
 
 final readonly class AsyncEventDispatcher implements EventDispatcher
 {
+    #[\Override]
     public function dispatch(DomainEvent $event): void
     {
     }
