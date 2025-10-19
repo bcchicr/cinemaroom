@@ -124,7 +124,8 @@ stat-check-user:
 	docker-compose exec user ./vendor/bin/psalm
 
 fmt-user:
-	docker-compose run --entrypoint "" --rm -v $$(pwd)/services/user:/app user ./vendor/bin/php-cs-fixer fix
+	docker-compose run --entrypoint "" --rm -v $$(pwd)/services/user:/app user composer install
+	docker-compose run --entrypoint "" --rm -v $$(pwd)/services/user:/app user /app/vendor/bin/php-cs-fixer fix
 
 protoc-user:
 	docker-compose exec user sh -c 'protoc \
