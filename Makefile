@@ -125,7 +125,7 @@ stat-check-user:
 
 fmt-user:
 	docker-compose run --user $(id -u):$(id -g) --entrypoint "" --rm -v $$(pwd)/services/user:/app user composer install
-	docker-compose run --entrypoint "" --rm -v $$(pwd)/services/user:/app user /app/vendor/bin/php-cs-fixer fix
+	docker-compose run --user $(id -u):$(id -g) --entrypoint "" --rm -v $$(pwd)/services/user:/app user /app/vendor/bin/php-cs-fixer fix
 
 protoc-user:
 	docker-compose exec user sh -c 'protoc \
