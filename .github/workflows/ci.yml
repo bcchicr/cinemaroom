@@ -86,7 +86,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore(user): apply formatting'
-          file_pattern: 'services/user/**/*.php'
+          file_pattern: ':(glob)services/user/**/*.php'
+          disable_globbing: true
 
 
   test-all:
