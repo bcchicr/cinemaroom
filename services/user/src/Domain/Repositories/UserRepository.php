@@ -9,8 +9,6 @@ use App\Domain\ValueObjects\UserId;
 
 interface UserRepository
 {
-    public function nextIdentity(): UserId;
-
     public function findById(UserId $id): ?User;
 
     public function save(User $user): void;

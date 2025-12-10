@@ -18,11 +18,6 @@ final class DoctrineUserRepository extends ServiceEntityRepository implements Us
         parent::__construct($registry, User::class);
     }
 
-    public function nextIdentity(): UserId
-    {
-        return new UserId(Uuid::uuid7());
-    }
-
     public function findById(UserId $id): ?User
     {
         return $this->find($id);
