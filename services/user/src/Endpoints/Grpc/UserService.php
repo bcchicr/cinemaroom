@@ -28,13 +28,15 @@ final readonly class UserService implements UserServiceInterface
         private EditUserCommandHandler $editUserCommandHandler,
         private GetUserQueryHandler $getUserQueryHandler,
         private UserMapper $userMapper,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function Register(GRPC\ContextInterface $ctx, RegisterRequest $in): RegisterResponse
     {
-        $command = new RegisterUserCommand($in->getUsername());
+        $command = new RegisterUserCommand(
+            userId: Uuid::fromString($in->getId()?->getValue() ?? ''),
+            username: $in->getUsername(),
+        );
         $user = $this->registerUserCommandHandler->handle($command);
 
         $response = new RegisterResponse();
