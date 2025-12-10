@@ -8,7 +8,7 @@ option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Authn\\v1";
 import "cinemaroom/authn/v1/request.proto";
 import "cinemaroom/authn/v1/response.proto";
 
-service UserService {
+service AuthnService {
   rpc Register (authn.v1.request.RegisterRequest) returns (authn.v1.response.RegisterResponse);
   rpc Login (authn.v1.request.LoginRequest) returns (authn.v1.response.LoginResponse);
   rpc Refresh (authn.v1.request.RefreshRequest) returns (authn.v1.response.RefreshResponse);

@@ -8,7 +8,7 @@ ARG UID
 ARG GID
 ARG PROTOC_VERSION
 
-RUN apk add --no-cache "protoc=${PROTOC_VERSION}"
+RUN apk update && apk add --no-cache "protoc=${PROTOC_VERSION}" "protobuf-dev"
 
 RUN if getent group ${GID} >/dev/null 2>&1; then \
     EXISTING_GROUP=$(getent group ${GID} | cut -d: -f1); \
@@ -19,6 +19,12 @@ RUN if getent group ${GID} >/dev/null 2>&1; then \
     fi \
     && mkdir -p /home/${USER_NAME} /app \
     && chown -R ${UID}:${GID} /home/${USER_NAME} /app
+
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10 \
+    && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1 \
+    && go install github.com/pressly/goose/v3/cmd/goose@latest
+
+RUN chown -R ${UID}:${GID} /go
 
 WORKDIR /app
 

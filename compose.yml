@@ -69,8 +69,10 @@ services:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${AUTHN_PORT:-8003}:8080
     volumes:
       - ./services/authn:/app
+      - ./lib/proto:/lib/proto
       - go-mod-cache:/go/pkg/mod
     entrypoint: entrypoint.sh
+    # tty: true
 
   chat:
     build:
@@ -186,7 +188,7 @@ services:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432
     networks:
       - cinemaroom
-  
+
   redis:
     image: redis:${REDIS_VERSION}
     ports:
@@ -221,7 +223,7 @@ services:
     command: server --console-address ":9001" /data
     networks:
       - cinemaroom
-  
+
   buggregator:
     image: ghcr.io/buggregator/server:dev
     ports:
@@ -245,4 +247,3 @@ volumes:
   redis-data:
   rabbitmq_data:
   minio-data:
-    

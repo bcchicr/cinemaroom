@@ -22,11 +22,12 @@ message LoginRequest {
 }
 
 message LogoutRequest {
-  authn.v1.message.JwtToken jwt_token = 1;
+  string jwt_token = 1;
+  string refresh_token = 2;
 }
 
 message RefreshRequest {
-  authn.v1.message.RefreshToken refresh_token = 1;
+  string refresh_token = 1;
 }
 
 message EditRequest {

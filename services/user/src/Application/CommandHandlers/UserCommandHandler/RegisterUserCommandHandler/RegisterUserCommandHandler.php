@@ -8,6 +8,7 @@ use App\Application\Resources\UserResource;
 use App\Domain\Aggregates\User\User;
 use App\Domain\Events\EventDispatcher;
 use App\Domain\Repositories\UserRepository;
+use App\Domain\ValueObjects\UserId;
 
 final readonly class RegisterUserCommandHandler
 {
@@ -19,7 +20,7 @@ final readonly class RegisterUserCommandHandler
 
     public function handle(RegisterUserCommand $command): UserResource
     {
-        $userId = $this->userRepository->nextIdentity();
+        $userId = new UserId($command->userId);
         $user = User::register(
             id: $userId,
             username: $command->username,

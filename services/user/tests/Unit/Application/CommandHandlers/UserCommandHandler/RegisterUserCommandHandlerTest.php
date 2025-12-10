@@ -21,12 +21,8 @@ final class RegisterUserCommandHandlerTest extends TestCase
         $eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $username = 'test_user';
-        $command = new RegisterUserCommand($username);
         $id = new UserId(Uuid::uuid7());
-
-        $userRepository->expects($this->once())
-            ->method('nextIdentity')
-            ->willReturn($id);
+        $command = new RegisterUserCommand($id->value(), $username);
 
         $userRepository->expects($this->once())
             ->method('save')

@@ -9,7 +9,8 @@ import "cinemaroom/common/v1/message.proto";
 import "cinemaroom/user/v1/message.proto";
 
 message RegisterRequest {
-  string username = 1;
+  common.v1.message.Uuid id = 1;
+  string username = 2;
 }
 
 message GetRequest {

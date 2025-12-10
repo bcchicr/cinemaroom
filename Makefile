@@ -170,7 +170,62 @@ down-authn:
 down-clear-authn:
 	docker-compose down --remove-orphans --volumes authn
 
-protoc-authn:
+AUTHN_PROTO_PATH := /lib/proto
+AUTHN_OUT_DIR := /app/generated
+AUTHN_MODULE_PREFIX=github.com/bcchicr/cinemaroom/services/authn/generated
+protoc-authn: \
+	protoc-authn-common \
+	protoc-authn-authn \
+	protoc-authn-user
+
+protoc-authn-common:
+	docker-compose exec authn sh -c 'protoc \
+      --go_out=$(AUTHN_OUT_DIR) \
+	  --go_opt=paths=source_relative \
+	  --go-grpc_out=$(AUTHN_OUT_DIR) \
+	  --go-grpc_opt=paths=source_relative \
+      --go_opt=Mcinemaroom/common/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/common/v1 \
+      --go-grpc_opt=Mcinemaroom/common/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/common/v1 \
+      --proto_path=$(AUTHN_PROTO_PATH) \
+      $$(find $(AUTHN_PROTO_PATH)/cinemaroom/common -name "*.proto")'
+
+protoc-authn-authn:
+	docker-compose exec authn sh -c 'protoc \
+      --go_out=$(AUTHN_OUT_DIR) \
+	  --go_opt=paths=source_relative \
+	  --go-grpc_out=$(AUTHN_OUT_DIR) \
+	  --go-grpc_opt=paths=source_relative \
+      --go_opt=Mcinemaroom/authn/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go-grpc_opt=Mcinemaroom/authn/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go_opt=Mcinemaroom/authn/v1/request.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go-grpc_opt=Mcinemaroom/authn/v1/request.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go_opt=Mcinemaroom/authn/v1/response.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go-grpc_opt=Mcinemaroom/authn/v1/response.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go_opt=Mcinemaroom/authn/v1/service.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+      --go-grpc_opt=Mcinemaroom/authn/v1/service.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/authn/v1 \
+	  --go_opt=Mcinemaroom/common/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/common/v1 \
+      --go-grpc_opt=Mcinemaroom/common/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/common/v1 \
+      --proto_path=$(AUTHN_PROTO_PATH) \
+      $$(find $(AUTHN_PROTO_PATH)/cinemaroom/authn -name "*.proto")'
+
+protoc-authn-user:
+	docker-compose exec authn sh -c 'protoc \
+      --go_out=$(AUTHN_OUT_DIR) \
+	  --go_opt=paths=source_relative \
+	  --go-grpc_out=$(AUTHN_OUT_DIR) \
+	  --go-grpc_opt=paths=source_relative \
+      --go_opt=Mcinemaroom/user/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go-grpc_opt=Mcinemaroom/user/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go_opt=Mcinemaroom/user/v1/request.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go-grpc_opt=Mcinemaroom/user/v1/request.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go_opt=Mcinemaroom/user/v1/response.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go-grpc_opt=Mcinemaroom/user/v1/response.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go_opt=Mcinemaroom/user/v1/service.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+      --go-grpc_opt=Mcinemaroom/user/v1/service.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/user/v1 \
+	  --go_opt=Mcinemaroom/common/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/common/v1 \
+      --go-grpc_opt=Mcinemaroom/common/v1/message.proto=$(AUTHN_MODULE_PREFIX)/cinemaroom/common/v1 \
+      --proto_path=$(AUTHN_PROTO_PATH) \
+      $$(find $(AUTHN_PROTO_PATH)/cinemaroom/user -name "*.proto")'
 
 docker-pull-authn:
 	docker-compose pull --ignore-pull-failures authn

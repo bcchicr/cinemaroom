@@ -1,7 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"log"
+
+	"github.com/bcchicr/cinemaroom/services/authn/app"
+	"github.com/bcchicr/cinemaroom/services/authn/config"
+)
 
 func main() {
-    fmt.Println("-- Server stub --")
+	cfg, err := config.NewConfig()
+	if err != nil {
+		log.Fatalf("config error: %v", err)
+	}
+
+	app.Run(cfg)
 }

@@ -17,7 +17,7 @@ message LoginResponse {
 }
 
 message LogoutResponse {
-  common.v1.message.Uuid user_id = 1;
+  common.v1.message.Uuid account_id = 1;
 }
 
 message RefreshResponse {
@@ -25,5 +25,5 @@ message RefreshResponse {
 }
 
 message EditResponse {
-  common.v1.message.Uuid user_id = 1;
+  common.v1.message.Uuid account_id = 1;
 }
