@@ -9,7 +9,6 @@ use App\Domain\Repositories\UserRepository;
 use App\Domain\ValueObjects\UserId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Ramsey\Uuid\Uuid;
 
 final class DoctrineUserRepository extends ServiceEntityRepository implements UserRepository
 {

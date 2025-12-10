@@ -56,7 +56,7 @@ final class UserServiceTest extends TestCase
         $request = new RegisterRequest();
         $request->setUsername($username);
         $request->setId(
-            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()])
+            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()]),
         );
 
         $call->start($request);
@@ -84,7 +84,7 @@ final class UserServiceTest extends TestCase
         $request = new RegisterRequest();
         $request->setUsername($username);
         $request->setId(
-            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()])
+            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()]),
         );
 
         $call->start($request);
@@ -131,7 +131,7 @@ final class UserServiceTest extends TestCase
         $request = new RegisterRequest();
         $request->setUsername('test_user');
         $request->setId(
-            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()])
+            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()]),
         );
 
         $call->start($request);
@@ -192,7 +192,7 @@ final class UserServiceTest extends TestCase
         $request = new RegisterRequest();
         $request->setUsername($oldUsername);
         $request->setId(
-            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()])
+            new Uuid(['value' => \Ramsey\Uuid\Uuid::uuid7()->toString()]),
         );
 
         $call->start($request);

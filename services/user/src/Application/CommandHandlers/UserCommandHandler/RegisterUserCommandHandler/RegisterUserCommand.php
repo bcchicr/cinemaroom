@@ -11,5 +11,6 @@ final readonly class RegisterUserCommand
     public function __construct(
         public UuidInterface $userId,
         public string $username,
-    ) {}
+    ) {
+    }
 }
