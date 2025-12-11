@@ -8,11 +8,11 @@ import (
 
 	"github.com/bcchicr/cinemaroom/services/authn/config"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application/handlers"
-	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/password"
-	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/token"
 	grpcendpoint "github.com/bcchicr/cinemaroom/services/authn/internal/endpoint/grpc"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/gateway"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/persistence"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/services/password"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/services/token"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"

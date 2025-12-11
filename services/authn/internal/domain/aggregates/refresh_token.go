@@ -29,9 +29,9 @@ func (a *RefreshToken) Value() string {
 	return a.value
 }
 
-func (a *RefreshToken) Hash() (string, error) {
+func (a *RefreshToken) Hash() string {
 	hash := sha256.Sum256([]byte(a.Value()))
-	return hex.EncodeToString(hash[:]), nil
+	return hex.EncodeToString(hash[:])
 }
 
 func (a *RefreshToken) ExpiresAt() time.Time {
