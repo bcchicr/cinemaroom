@@ -9,8 +9,8 @@ import (
 
 type AccountRepository interface {
 	NextIdentity() (*vo.AccountID, error)
-	Save(context.Context, *aggregates.Account) error
-	FindByID(context.Context, *vo.AccountID) (*aggregates.Account, error)
-	FindByEmail(context.Context, *vo.Email) (*aggregates.Account, error)
-	FindByLogin(context.Context, string) (*aggregates.Account, error)
+	Save(ctx context.Context, account *aggregates.Account) error
+	FindByID(ctx context.Context, account *vo.AccountID) (*aggregates.Account, error)
+	FindByEmail(ctx context.Context, email *vo.Email) (*aggregates.Account, error)
+	FindByLogin(ctx context.Context, login string) (*aggregates.Account, error)
 }

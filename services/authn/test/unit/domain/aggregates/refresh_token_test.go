@@ -15,38 +15,60 @@ func TestNewRefreshToken(t *testing.T) {
 	validRefreshTokenID, _ := vo.NewRefreshTokenIdFromString(uuid.NewString())
 	validAccountID, _ := vo.NewAccountIDFromString(uuid.NewString())
 	validValue := "value"
+	validValueHash := "hash"
 	validExpiresAt := time.Now()
+
+	emptyValue := ""
 
 	tests := []struct {
 		name          string
 		id            *vo.RefreshTokenID
 		accountID     *vo.AccountID
-		value         string
+		value         *string
+		valueHash     string
 		expiresAt     time.Time
 		wantErr       bool
 		wantErrCode   domain.ErrorCode
 		wantID        *vo.RefreshTokenID
 		wantAccountID *vo.AccountID
-		wantValue     string
+		wantValue     *string
+		wantValueHash string
 		wantExpiresAt time.Time
 	}{
 		{
 			name:          "happy path",
 			id:            validRefreshTokenID,
 			accountID:     validAccountID,
-			value:         validValue,
+			value:         &validValue,
+			valueHash:     validValueHash,
 			expiresAt:     validExpiresAt,
 			wantErr:       false,
 			wantID:        validRefreshTokenID,
 			wantAccountID: validAccountID,
-			wantValue:     validValue,
+			wantValue:     &validValue,
+			wantValueHash: validValueHash,
+			wantExpiresAt: validExpiresAt,
+		},
+		{
+			name:          "happy path nil value",
+			id:            validRefreshTokenID,
+			accountID:     validAccountID,
+			value:         nil,
+			valueHash:     validValueHash,
+			expiresAt:     validExpiresAt,
+			wantErr:       false,
+			wantID:        validRefreshTokenID,
+			wantAccountID: validAccountID,
+			wantValue:     nil,
+			wantValueHash: validValueHash,
 			wantExpiresAt: validExpiresAt,
 		},
 		{
 			name:        "nil id",
 			id:          nil,
 			accountID:   validAccountID,
-			value:       validValue,
+			value:       &validValue,
+			valueHash:   validValueHash,
 			expiresAt:   validExpiresAt,
 			wantErr:     true,
 			wantErrCode: domain.CodeInvalidArgument,
@@ -55,7 +77,8 @@ func TestNewRefreshToken(t *testing.T) {
 			name:        "nil account id",
 			id:          validRefreshTokenID,
 			accountID:   nil,
-			value:       validValue,
+			value:       &validValue,
+			valueHash:   validValueHash,
 			expiresAt:   validExpiresAt,
 			wantErr:     true,
 			wantErrCode: domain.CodeInvalidArgument,
@@ -64,7 +87,7 @@ func TestNewRefreshToken(t *testing.T) {
 			name:        "empty value",
 			id:          validRefreshTokenID,
 			accountID:   validAccountID,
-			value:       "",
+			value:       &emptyValue,
 			expiresAt:   validExpiresAt,
 			wantErr:     true,
 			wantErrCode: domain.CodeInvalidArgument,
@@ -77,6 +100,7 @@ func TestNewRefreshToken(t *testing.T) {
 				tc.id,
 				tc.accountID,
 				tc.value,
+				tc.valueHash,
 				tc.expiresAt,
 			)
 
@@ -110,15 +134,15 @@ func TestNewRefreshToken(t *testing.T) {
 			}
 
 			if got := a.Value(); got != tc.wantValue {
-				t.Fatalf("Login(): got %v, want %v", got, tc.wantValue)
+				t.Fatalf("Value(): got %v, want %v", got, tc.wantValue)
+			}
+
+			if got := a.ValueHash(); got != tc.wantValueHash {
+				t.Fatalf("ValueHash(): got %v, want %v", got, tc.wantValueHash)
 			}
 
 			if got := a.ExpiresAt(); !got.Equal(tc.wantExpiresAt) {
 				t.Fatalf("ExpiresAt(): got %v, want %v", got, tc.wantExpiresAt)
-			}
-
-			if got := a.Hash(); got == a.Value() {
-				t.Fatalf("Hash(): hash is same as value")
 			}
 		})
 	}

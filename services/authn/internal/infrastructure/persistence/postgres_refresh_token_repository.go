@@ -32,11 +32,11 @@ func (r *PostgresRefreshTokenRepository) NextIdentity() (*vo.RefreshTokenID, err
 
 func (r *PostgresRefreshTokenRepository) Save(ctx context.Context, a *aggregates.RefreshToken) error {
 	query := `
-        INSERT INTO refresh_tokens (id, account_id, value, expires_at)
+        INSERT INTO refresh_tokens (id, account_id, value_hash, expires_at)
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (id) DO UPDATE SET
             account_id = EXCLUDED.account_id,
-            value = EXCLUDED.value,
+            value_hash = EXCLUDED.value_hash,
             expires_at = EXCLUDED.expires_at,
             updated_at = current_timestamp;
     `
@@ -46,7 +46,7 @@ func (r *PostgresRefreshTokenRepository) Save(ctx context.Context, a *aggregates
 		query,
 		a.ID().String(),
 		a.AccountID().String(),
-		a.Value(),
+		a.ValueHash(),
 		a.ExpiresAt(),
 	)
 	if err != nil {
@@ -58,7 +58,7 @@ func (r *PostgresRefreshTokenRepository) Save(ctx context.Context, a *aggregates
 
 func (r *PostgresRefreshTokenRepository) FindByID(ctx context.Context, id *vo.RefreshTokenID) (*aggregates.RefreshToken, error) {
 	query := `
-		SELECT id, account_id, value, expires_at
+		SELECT id, account_id, value_hash, expires_at
 		FROM refresh_tokens
 		WHERE id = $1
 		LIMIT 1;
@@ -69,11 +69,11 @@ func (r *PostgresRefreshTokenRepository) FindByID(ctx context.Context, id *vo.Re
 	var (
 		rawID        string
 		rawAccountID string
-		rawValue     string
+		rawValueHash string
 		rawExpiresAt time.Time
 	)
 
-	err := row.Scan(&rawID, &rawAccountID, &rawValue, &rawExpiresAt)
+	err := row.Scan(&rawID, &rawAccountID, &rawValueHash, &rawExpiresAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -84,27 +84,27 @@ func (r *PostgresRefreshTokenRepository) FindByID(ctx context.Context, id *vo.Re
 		)
 	}
 
-	return mapRawRefreshTokenToAggregate(rawID, rawAccountID, rawValue, rawExpiresAt)
+	return mapRawRefreshTokenToAggregate(rawID, rawAccountID, nil, rawValueHash, rawExpiresAt)
 }
 
-func (r *PostgresRefreshTokenRepository) FindByValue(ctx context.Context, value string) (*aggregates.RefreshToken, error) {
+func (r *PostgresRefreshTokenRepository) FindByHash(ctx context.Context, valueHash string) (*aggregates.RefreshToken, error) {
 	query := `
-		SELECT id, account_id, value, expires_at
+		SELECT id, account_id, value_hash, expires_at
 		FROM refresh_tokens
-		WHERE value = $1
+		WHERE value_hash = $1
 		LIMIT 1;
 	`
 
-	row := r.db.QueryRowContext(ctx, query, value)
+	row := r.db.QueryRowContext(ctx, query, valueHash)
 
 	var (
 		rawID        string
 		rawAccountID string
-		rawValue     string
+		rawValueHash string
 		rawExpiresAt time.Time
 	)
 
-	err := row.Scan(&rawID, &rawAccountID, &rawValue, &rawExpiresAt)
+	err := row.Scan(&rawID, &rawAccountID, &rawValueHash, &rawExpiresAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -115,13 +115,14 @@ func (r *PostgresRefreshTokenRepository) FindByValue(ctx context.Context, value 
 		)
 	}
 
-	return mapRawRefreshTokenToAggregate(rawID, rawAccountID, rawValue, rawExpiresAt)
+	return mapRawRefreshTokenToAggregate(rawID, rawAccountID, nil, rawValueHash, rawExpiresAt)
 }
 
 func mapRawRefreshTokenToAggregate(
 	rawID string,
 	rawAccountID string,
-	rawValue string,
+	rawValue *string,
+	rawValueHash string,
 	rawExpiresAt time.Time,
 ) (*aggregates.RefreshToken, error) {
 	id, err := vo.NewRefreshTokenIdFromString(rawID)
@@ -138,6 +139,7 @@ func mapRawRefreshTokenToAggregate(
 		id,
 		accountID,
 		rawValue,
+		rawValueHash,
 		rawExpiresAt,
 	)
 }
@@ -154,22 +156,6 @@ func (r *PostgresRefreshTokenRepository) Delete(ctx context.Context, a *aggregat
 	if err != nil {
 		return infrastructure.NewDBTransactionFailedError(
 			fmt.Sprintf("failed to delete refresh token with id %s: %v", id, err),
-		)
-	}
-
-	return nil
-}
-
-func (r *PostgresRefreshTokenRepository) DeleteByValue(ctx context.Context, value string) error {
-	query := `
-		DELETE FROM refresh_tokens
-		WHERE value = $1;
-	`
-
-	_, err := r.db.ExecContext(ctx, query, value)
-	if err != nil {
-		return infrastructure.NewDBTransactionFailedError(
-			fmt.Sprintf("failed to delete refresh token by value: %v", err),
 		)
 	}
 

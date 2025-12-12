@@ -3,7 +3,9 @@ package token
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"time"
@@ -131,6 +133,7 @@ func (s *service) generateRefreshToken(accountID *vo.AccountID, ttl time.Duratio
 	}
 
 	refreshTokenValue := base64.URLEncoding.EncodeToString(randomBytes)
+	refreshTokenHash := s.Hash(refreshTokenValue)
 
 	refreshTokenID, err := s.refreshTokenRepository.NextIdentity()
 	if err != nil {
@@ -140,7 +143,8 @@ func (s *service) generateRefreshToken(accountID *vo.AccountID, ttl time.Duratio
 	return aggregates.NewRefreshToken(
 		refreshTokenID,
 		accountID,
-		refreshTokenValue,
+		&refreshTokenValue,
+		refreshTokenHash,
 		expiresAt,
 	)
 }
@@ -191,4 +195,9 @@ func (s *service) Revoke(ctx context.Context, token *vo.AccessToken) error {
 	}
 
 	return nil
+}
+
+func (s *service) Hash(refreshTokenString string) string {
+	hash := sha256.Sum256([]byte(refreshTokenString))
+	return hex.EncodeToString(hash[:])
 }

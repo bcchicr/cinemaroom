@@ -15,6 +15,7 @@ type Claims struct {
 
 type Service interface {
 	Generate(a *aggregates.Account) (*vo.AccessToken, *aggregates.RefreshToken, error)
-	GetClaims(context.Context, string) (*Claims, error)
+	GetClaims(ctx context.Context, JwtTokenString string) (*Claims, error)
 	Revoke(ctx context.Context, token *vo.AccessToken) error
+	Hash(refreshTokenValue string) string
 }

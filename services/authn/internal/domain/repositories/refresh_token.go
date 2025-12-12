@@ -9,9 +9,8 @@ import (
 
 type RefreshTokenRepository interface {
 	NextIdentity() (*vo.RefreshTokenID, error)
-	Save(context.Context, *aggregates.RefreshToken) error
-	FindByID(context.Context, *vo.RefreshTokenID) (*aggregates.RefreshToken, error)
-	FindByValue(context.Context, string) (*aggregates.RefreshToken, error)
-	Delete(context.Context, *aggregates.RefreshToken) error
-	DeleteByValue(context.Context, string) error
+	Save(ctx context.Context, token *aggregates.RefreshToken) error
+	FindByID(ctx context.Context, id *vo.RefreshTokenID) (*aggregates.RefreshToken, error)
+	FindByHash(ctx context.Context, hash string) (*aggregates.RefreshToken, error)
+	Delete(ctx context.Context, token *aggregates.RefreshToken) error
 }

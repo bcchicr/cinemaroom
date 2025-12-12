@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application/clients"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/application/handlers/resources"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/domain"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/aggregates"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/repositories"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/password"
@@ -18,7 +20,7 @@ type RegisterCommand struct {
 }
 
 type RegistrationHandler interface {
-	Handle(context.Context, RegisterCommand) (*vo.AccessToken, *aggregates.RefreshToken, error)
+	Handle(ctx context.Context, command RegisterCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error)
 }
 
 type registrationHandler struct {
@@ -45,7 +47,7 @@ func NewRegistrationHandler(
 	}
 }
 
-func (handler *registrationHandler) Handle(ctx context.Context, command RegisterCommand) (*vo.AccessToken, *aggregates.RefreshToken, error) {
+func (handler *registrationHandler) Handle(ctx context.Context, command RegisterCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error) {
 	id, err := handler.accountRepository.NextIdentity()
 	if err != nil {
 		return nil, nil, err
@@ -53,7 +55,6 @@ func (handler *registrationHandler) Handle(ctx context.Context, command Register
 
 	var email *vo.Email
 	if command.Email != nil {
-		var err error
 		email, err = vo.NewEmail(*command.Email)
 		if err != nil {
 			return nil, nil, err
@@ -69,6 +70,7 @@ func (handler *registrationHandler) Handle(ctx context.Context, command Register
 	if err != nil {
 		return nil, nil, err
 	}
+	
 	account, err := aggregates.NewAccount(
 		id,
 		command.Login,
@@ -93,10 +95,19 @@ func (handler *registrationHandler) Handle(ctx context.Context, command Register
 		return nil, nil, err
 	}
 
+	if refreshToken.Value() == nil {
+		return nil, nil, domain.NewFailedInvariantError("refresh token must have not nil value")
+	}
+
 	err = handler.refreshTokenRepository.Save(ctx, refreshToken)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return accessToken, refreshToken, nil
+	return accessToken,
+		&resources.RefreshTokenResource{
+			Value:     *refreshToken.Value(),
+			ExpiresAt: refreshToken.ExpiresAt(),
+		},
+		nil
 }

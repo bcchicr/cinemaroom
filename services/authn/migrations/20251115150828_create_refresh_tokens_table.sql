@@ -1,16 +1,17 @@
 -- +goose Up
 -- +goose StatementBegin
-create table refresh_tokens (
-    id uuid primary key,
-    account_id uuid references accounts(id),
-    value varchar not null,
-    expires_at timestamp not null,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp
+CREATE TABLE refresh_tokens (
+    id UUID PRIMARY KEY,
+    account_id UUID REFERENCES accounts(id),
+    value_hash VARCHAR NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX refresh_tokens_value_hash_idx ON refresh_tokens(value_hash);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-drop table refresh_tokens;
+DROP TABLE refresh_tokens;
 -- +goose StatementEnd

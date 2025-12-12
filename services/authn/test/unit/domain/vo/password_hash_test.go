@@ -16,15 +16,13 @@ func TestNewPasswordHash(t *testing.T) {
 		wantErr     bool
 		wantErrCode domain.ErrorCode
 		wantValue   string
-		wantString  string
 		wantMap     map[string]any
 	}{
 		{
-			name:       "valid string",
-			value:      "hash",
-			wantErr:    false,
-			wantValue:  "hash",
-			wantString: "hash",
+			name:      "valid string",
+			value:     "hash",
+			wantErr:   false,
+			wantValue: "hash",
 			wantMap: map[string]any{
 				"value": "",
 			},
@@ -66,8 +64,8 @@ func TestNewPasswordHash(t *testing.T) {
 				t.Fatalf("Value(): got %q, want %q", got, tc.wantValue)
 			}
 
-			if got := vo.String(); got != tc.wantString {
-				t.Fatalf("String(): got %v, want %v", got, tc.wantString)
+			if got := vo.String(); got != "" {
+				t.Fatalf("String(): got %v, want empty string", got)
 			}
 
 			if got := vo.ToMap(); !maps.Equal(got, tc.wantMap) {

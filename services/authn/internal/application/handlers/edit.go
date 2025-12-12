@@ -19,7 +19,7 @@ type EditCommand struct {
 }
 
 type EditHandler interface {
-	Handle(context.Context, EditCommand) (*vo.AccountID, error)
+	Handle(ctx context.Context, command EditCommand) (*vo.AccountID, error)
 }
 
 type editHandler struct {

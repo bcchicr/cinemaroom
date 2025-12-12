@@ -16,15 +16,13 @@ func TestNewPassword(t *testing.T) {
 		wantErr     bool
 		wantErrCode domain.ErrorCode
 		wantValue   string
-		wantString  string
 		wantMap     map[string]any
 	}{
 		{
-			name:       "valid string",
-			value:      "password",
-			wantErr:    false,
-			wantValue:  "password",
-			wantString: "password",
+			name:      "valid string",
+			value:     "password",
+			wantErr:   false,
+			wantValue: "password",
 			wantMap: map[string]any{
 				"value": "",
 			},
@@ -78,8 +76,8 @@ func TestNewPassword(t *testing.T) {
 				t.Fatalf("Value(): got %q, want %q", got, tc.wantValue)
 			}
 
-			if got := vo.String(); got != tc.wantString {
-				t.Fatalf("String(): got %v, want %v", got, tc.wantString)
+			if got := vo.String(); got != "" {
+				t.Fatalf("String(): got %v, want empty string", got)
 			}
 
 			if got := vo.ToMap(); !maps.Equal(got, tc.wantMap) {

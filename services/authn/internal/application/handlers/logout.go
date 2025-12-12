@@ -16,7 +16,7 @@ type LogoutCommand struct {
 }
 
 type LogoutHandler interface {
-	Handle(context.Context, LogoutCommand) (*vo.AccountID, error)
+	Handle(ctx context.Context, command LogoutCommand) (*vo.AccountID, error)
 }
 
 type logoutHandler struct {
@@ -64,7 +64,8 @@ func (handler *logoutHandler) Handle(ctx context.Context, command LogoutCommand)
 		return nil, err
 	}
 
-	refreshToken, err := handler.refreshTokenRepository.FindByValue(ctx, command.RefreshTokenString)
+	refreshTokenHash := handler.tokenService.Hash(command.RefreshTokenString)
+	refreshToken, err := handler.refreshTokenRepository.FindByHash(ctx, refreshTokenHash)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,7 @@ func (handler *logoutHandler) Handle(ctx context.Context, command LogoutCommand)
 		return nil, application.NewNotAuthorizedError("user is not authorized to delete other user's refresh token")
 	}
 
-	if err := handler.refreshTokenRepository.DeleteByValue(ctx, command.RefreshTokenString); err != nil {
+	if err := handler.refreshTokenRepository.Delete(ctx, refreshToken); err != nil {
 		return nil, err
 	}
 
