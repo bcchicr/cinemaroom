@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
+
 func NewGrpcClientErrorsInterceptor() grpc.UnaryClientInterceptor {
 
 	return func(
@@ -33,13 +34,13 @@ func NewGrpcClientErrorsInterceptor() grpc.UnaryClientInterceptor {
 		}
 
 		switch st.Code() {
-			case codes.Unavailable, codes.DeadlineExceeded, codes.Canceled:
-				return infrastructure.NewExternalServiceDownError(
-					fmt.Sprintf("%s: service unavailable (%s): %s", method, st.Code(), st.Message()),
-				)
+		case codes.Unavailable, codes.DeadlineExceeded, codes.Canceled:
+			return infrastructure.NewExternalServiceDownError(
+				fmt.Sprintf("%s: service unavailable (%s): %s", method, st.Code(), st.Message()),
+			)
 
-			default:
-				return  err
+		default:
+			return err
 		}
 	}
 }
