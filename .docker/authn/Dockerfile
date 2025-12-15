@@ -47,4 +47,6 @@ ENV APP_ENV=test
 
 COPY --chown=${UID}:${GID} ./services/authn .
 
+COPY ./lib/proto /lib/proto
+
 USER ${UID}

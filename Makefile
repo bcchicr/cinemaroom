@@ -170,6 +170,15 @@ down-authn:
 down-clear-authn:
 	docker-compose down --remove-orphans --volumes authn
 
+fmt-authn:
+	docker-compose run --user $(id -u):$(id -g) --entrypoint "" --rm -v $$(pwd)/services/authn:/app authn go fmt ./...
+
+migrate-authn:
+	docker compose exec authn goose up
+
+test-authn:
+	docker-compose run --user $(id -u):$(id -g) --entrypoint "" --rm -v $$(pwd)/services/authn:/app authn go test ./test/...
+
 AUTHN_PROTO_PATH := /lib/proto
 AUTHN_OUT_DIR := /app/generated
 AUTHN_MODULE_PREFIX=github.com/bcchicr/cinemaroom/services/authn/generated

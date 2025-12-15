@@ -45,6 +45,9 @@ services:
     environment:
       RR_CONFIG_FILE: ${USER_RR_CONFIG_FILE}
     entrypoint: entrypoint.sh
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   authn:
     build:
@@ -62,6 +65,11 @@ services:
     ports:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${AUTHN_PORT:-8003}:8080
     entrypoint: entrypoint.sh
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   chat:
     build:
@@ -78,14 +86,12 @@ services:
         - GOLANG_VERSION
         - UID
         - GID
-
     ports:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${CHAT_SERVICE_PORT:-8003}:8080
     networks:
       - cinemaroom
     env_file: ./lib/.common.env
     tty: true
-  #    entrypoint: entrypoint.sh
 
   playlist:
     build:
@@ -108,7 +114,6 @@ services:
       - cinemaroom
     env_file: ./lib/.common.env
     tty: true
-  #    entrypoint: entrypoint.sh
 
   chat-authz:
     build:
@@ -131,7 +136,6 @@ services:
       - cinemaroom
     env_file: ./lib/.common.env
     tty: true
-  #    entrypoint: entrypoint.sh
 
   postgres:
     build:
@@ -167,7 +171,12 @@ services:
       - ${NETWORK_INTERFACE:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432
     networks:
       - cinemaroom
-  
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 5432"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
   redis:
     image: redis:${REDIS_VERSION}
     ports:
@@ -177,6 +186,15 @@ services:
     entrypoint: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
     networks:
       - cinemaroom
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "redis-cli -a \"$REDIS_PASSWORD\" ping | grep -q PONG"
+        ]
+      interval: 2s
+      timeout: 3s
+      retries: 15
 
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION}
