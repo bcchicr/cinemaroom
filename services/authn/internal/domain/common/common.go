@@ -14,7 +14,7 @@ const (
 
 type ValueObject interface {
 	fmt.Stringer
-	Equals(ValueObject) bool
+	Equals(other ValueObject) bool
 	ToMap() map[string]any
 }
 

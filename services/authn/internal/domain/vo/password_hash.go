@@ -26,7 +26,7 @@ func (p *PasswordHash) Value() string {
 }
 
 func (p *PasswordHash) String() string {
-	return p.Value();
+	return "";
 }
 
 func (p *PasswordHash) ToMap() map[string]any {

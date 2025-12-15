@@ -1,16 +1,18 @@
 -- +goose Up
 -- +goose StatementBegin
-create table accounts (
-    id uuid primary key,
-    login varchar not null,
-    email varchar,
-    password_hash varchar not null,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp
+CREATE TABLE accounts (
+    id UUID PRIMARY KEY,
+    login VARCHAR NOT NULL,
+    email VARCHAR,
+    password_hash VARCHAR NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX accounts_login_idx ON accounts(login);
+CREATE UNIQUE INDEX accounts_email_idx ON accounts(email);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-drop table accounts;
+DROP TABLE accounts;
 -- +goose StatementEnd

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/application/handlers/resources"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain"
-	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/aggregates"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/repositories"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/token"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/vo"
@@ -17,7 +17,7 @@ type RefreshCommand struct {
 }
 
 type RefreshHandler interface {
-	Handle(context.Context, RefreshCommand) (*vo.AccessToken, *aggregates.RefreshToken, error)
+	Handle(ctx context.Context, command RefreshCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error)
 }
 
 type refreshHandler struct {
@@ -38,8 +38,9 @@ func NewRefreshHandler(
 	}
 }
 
-func (handler *refreshHandler) Handle(ctx context.Context, command RefreshCommand) (*vo.AccessToken, *aggregates.RefreshToken, error) {
-	refreshToken, err := handler.refreshTokenRepository.FindByValue(ctx, command.RefreshTokenString)
+func (handler *refreshHandler) Handle(ctx context.Context, command RefreshCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error) {
+	refreshTokenHash := handler.tokenService.Hash(command.RefreshTokenString)
+	refreshToken, err := handler.refreshTokenRepository.FindByHash(ctx, refreshTokenHash)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -52,7 +53,7 @@ func (handler *refreshHandler) Handle(ctx context.Context, command RefreshComman
 		return nil, nil, domain.NewAuthExpiredTokenError("refresh token expired")
 	}
 
-	if err := handler.refreshTokenRepository.DeleteByValue(ctx, command.RefreshTokenString); err != nil {
+	if err := handler.refreshTokenRepository.Delete(ctx, refreshToken); err != nil {
 		return nil, nil, err
 	}
 
@@ -70,10 +71,19 @@ func (handler *refreshHandler) Handle(ctx context.Context, command RefreshComman
 		return nil, nil, err
 	}
 
+	if refreshToken.Value() == nil {
+		return nil, nil, domain.NewFailedInvariantError("refresh token must have not nil value")
+	}
+
 	err = handler.refreshTokenRepository.Save(ctx, refreshToken)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return accessToken, refreshToken, nil
+	return accessToken,
+		&resources.RefreshTokenResource{
+			Value:     *refreshToken.Value(),
+			ExpiresAt: refreshToken.ExpiresAt(),
+		},
+		nil
 }

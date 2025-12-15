@@ -64,8 +64,8 @@ func (s *server) Register(ctx context.Context, req *authn.RegisterRequest) (*aut
 				ExpiresAt: timestamppb.New(access.ExpiresAt()),
 			},
 			RefreshToken: &authn.RefreshToken{
-				Value:     refresh.Value(),
-				ExpiresAt: timestamppb.New(refresh.ExpiresAt()),
+				Value:     refresh.Value,
+				ExpiresAt: timestamppb.New(refresh.ExpiresAt),
 			},
 		},
 	}
@@ -103,8 +103,8 @@ func (s *server) Login(ctx context.Context, req *authn.LoginRequest) (*authn.Log
 				ExpiresAt: timestamppb.New(access.ExpiresAt()),
 			},
 			RefreshToken: &authn.RefreshToken{
-				Value:     refresh.Value(),
-				ExpiresAt: timestamppb.New(refresh.ExpiresAt()),
+				Value:     refresh.Value,
+				ExpiresAt: timestamppb.New(refresh.ExpiresAt),
 			},
 		},
 	}
@@ -130,8 +130,8 @@ func (s *server) Refresh(ctx context.Context, req *authn.RefreshRequest) (*authn
 				ExpiresAt: timestamppb.New(access.ExpiresAt()),
 			},
 			RefreshToken: &authn.RefreshToken{
-				Value:     refresh.Value(),
-				ExpiresAt: timestamppb.New(refresh.ExpiresAt()),
+				Value:     refresh.Value,
+				ExpiresAt: timestamppb.New(refresh.ExpiresAt),
 			},
 		},
 	}

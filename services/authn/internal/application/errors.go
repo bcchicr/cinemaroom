@@ -63,6 +63,6 @@ func NewNotAuthorizedError(msg string) ApplicationError {
 	return &applicationError{
 		errorCode: CodeNotAuthorizedError,
 		msg:       msg,
-		grpcCode:  codes.Internal,
+		grpcCode:  codes.Unauthenticated,
 	}
 }

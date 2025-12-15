@@ -43,13 +43,21 @@ func (r *PostgresAccountRepository) Save(ctx context.Context, a *aggregates.Acco
             updated_at = current_timestamp;
     `
 
+	emailParam := sql.NullString{}
+	if a.Email() != nil {
+		emailParam = sql.NullString{
+			String: a.Email().String(),
+			Valid:  true,
+		}
+	}
+
 	_, err := r.db.ExecContext(
 		ctx,
 		query,
 		a.ID().String(),
 		a.Login(),
-		a.Email(),
-		a.PasswordHash().String(),
+		emailParam,
+		a.PasswordHash().Value(),
 	)
 	if err != nil {
 		return infrastructure.NewDBTransactionFailedError(
@@ -73,7 +81,7 @@ func (r *PostgresAccountRepository) FindByID(ctx context.Context, id *vo.Account
 	var (
 		rawID           string
 		rawLogin        string
-		rawEmail        string
+		rawEmail        sql.NullString
 		rawPasswordHash string
 	)
 
@@ -104,7 +112,7 @@ func (r *PostgresAccountRepository) FindByEmail(ctx context.Context, email *vo.E
 	var (
 		rawID           string
 		rawLogin        string
-		rawEmail        string
+		rawEmail        sql.NullString
 		rawPasswordHash string
 	)
 
@@ -135,7 +143,7 @@ func (r *PostgresAccountRepository) FindByLogin(ctx context.Context, login strin
 	var (
 		rawID           string
 		rawLogin        string
-		rawEmail        string
+		rawEmail        sql.NullString
 		rawPasswordHash string
 	)
 
@@ -156,7 +164,7 @@ func (r *PostgresAccountRepository) FindByLogin(ctx context.Context, login strin
 func mapRawAccountToAggregate(
 	rawID string,
 	rawLogin string,
-	rawEmail string,
+	rawEmail sql.NullString,
 	rawPasswordHash string,
 ) (*aggregates.Account, error) {
 	id, err := vo.NewAccountIDFromString(rawID)
@@ -164,9 +172,12 @@ func mapRawAccountToAggregate(
 		return nil, err
 	}
 
-	email, err := vo.NewEmail(rawEmail)
-	if err != nil {
-		return nil, err
+	var email *vo.Email
+	if rawEmail.Valid {
+		email, err = vo.NewEmail(rawEmail.String)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	passwordHash, err := vo.NewPasswordHash(rawPasswordHash)

@@ -5,8 +5,11 @@ import (
 	"fmt"
 
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/application/handlers/resources"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/domain"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/aggregates"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/repositories"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/password"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/token"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/vo"
 )
@@ -30,28 +33,31 @@ type LoginCommand struct {
 }
 
 type LoginHandler interface {
-	Handle(context.Context, LoginCommand) (*vo.AccessToken, *aggregates.RefreshToken, error)
+	Handle(ctx context.Context, command LoginCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error)
 }
 
 type loginHandler struct {
 	tokenService           token.Service
+	passwordService        password.Service
 	accountRepository      repositories.AccountRepository
 	refreshTokenRepository repositories.RefreshTokenRepository
 }
 
 func NewLoginHandler(
 	tokenService token.Service,
+	passwordService password.Service,
 	accountRepository repositories.AccountRepository,
 	refreshTokenRepository repositories.RefreshTokenRepository,
 ) LoginHandler {
 	return &loginHandler{
 		tokenService:           tokenService,
+		passwordService:        passwordService,
 		accountRepository:      accountRepository,
 		refreshTokenRepository: refreshTokenRepository,
 	}
 }
 
-func (handler *loginHandler) Handle(ctx context.Context, command LoginCommand) (*vo.AccessToken, *aggregates.RefreshToken, error) {
+func (handler *loginHandler) Handle(ctx context.Context, command LoginCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error) {
 	var account *aggregates.Account
 	var err error
 	switch command.IdentifierType {
@@ -79,7 +85,7 @@ func (handler *loginHandler) Handle(ctx context.Context, command LoginCommand) (
 	}
 
 	if account == nil {
-		return nil, nil, application.NewNotFoundError(
+		return nil, nil, application.NewNotAuthorizedError(
 			fmt.Sprintf(
 				"not found account with identifier %q, type %q",
 				command.Identifier,
@@ -88,9 +94,22 @@ func (handler *loginHandler) Handle(ctx context.Context, command LoginCommand) (
 		)
 	}
 
+	pass, err := vo.NewPassword(command.Password)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if ok := handler.passwordService.Verify(pass, account.PasswordHash()); !ok {
+		return nil, nil, application.NewNotAuthorizedError("invalid password")
+	}
+
 	accessToken, refreshToken, err := handler.tokenService.Generate(account)
 	if err != nil {
 		return nil, nil, err
+	}
+
+	if refreshToken.Value() == nil {
+		return nil, nil, domain.NewFailedInvariantError("refresh token must have not nil value")
 	}
 
 	err = handler.refreshTokenRepository.Save(ctx, refreshToken)
@@ -98,5 +117,10 @@ func (handler *loginHandler) Handle(ctx context.Context, command LoginCommand) (
 		return nil, nil, err
 	}
 
-	return accessToken, refreshToken, nil
+	return accessToken,
+		&resources.RefreshTokenResource{
+			Value:     *refreshToken.Value(),
+			ExpiresAt: refreshToken.ExpiresAt(),
+		},
+		nil
 }

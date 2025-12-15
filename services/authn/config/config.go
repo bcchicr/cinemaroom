@@ -41,7 +41,7 @@ type Jwt struct {
 }
 
 func NewConfig() (*Config, error) {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("/app/.env"); err != nil {
 		log.Println("WARN: failed to load dotenv file. Use environment variables")
 	}
 

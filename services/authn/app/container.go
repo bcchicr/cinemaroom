@@ -7,20 +7,30 @@ import (
 	"time"
 
 	"github.com/bcchicr/cinemaroom/services/authn/config"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/application/clients"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application/handlers"
-	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/password"
-	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/token"
+	"github.com/bcchicr/cinemaroom/services/authn/internal/domain/repositories"
+	password_i "github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/password"
+	token_i "github.com/bcchicr/cinemaroom/services/authn/internal/domain/services/token"
 	grpcendpoint "github.com/bcchicr/cinemaroom/services/authn/internal/endpoint/grpc"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/gateway"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/persistence"
+	password_r "github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/services/password"
+	token_r "github.com/bcchicr/cinemaroom/services/authn/internal/infrastructure/services/token"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
 )
 
 type Container struct {
-	GrpcServer *grpc.Server
-	DB         *sql.DB
+	GrpcServer             *grpc.Server
+	DB                     *sql.DB
+	Redis                  *redis.Client
+	PasswordService        password_i.Service
+	TokenService           token_i.Service
+	AccountRepository      repositories.AccountRepository
+	RefreshTokenRepository repositories.RefreshTokenRepository
+	UserServiceClient      clients.UserServiceClient
 }
 
 func NewContainer(cfg *config.Config) (*Container, error) {
@@ -45,10 +55,10 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 	}
 
 	accountRepository := persistence.NewPostgresAccountRepository(db)
-	passwordService := password.NewService()
+	passwordService := password_r.NewService()
 
 	refreshTokenRepository := persistence.NewPostgresRefreshTokenRepository(db)
-	tokenService := token.NewService(
+	tokenService := token_r.NewService(
 		cfg.Jwt.AccessSecret,
 		time.Duration(cfg.Jwt.AccessTTLInMinutes)*time.Minute,
 		time.Duration(cfg.Jwt.RefreshTTLInDays)*time.Hour*24,
@@ -70,6 +80,7 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 
 	loginHandler := handlers.NewLoginHandler(
 		tokenService,
+		passwordService,
 		accountRepository,
 		refreshTokenRepository,
 	)
@@ -106,8 +117,14 @@ func NewContainer(cfg *config.Config) (*Container, error) {
 	)
 
 	return &Container{
-		GrpcServer: grpcServer,
-		DB:         db,
+		GrpcServer:             grpcServer,
+		DB:                     db,
+		Redis:                  redisClient,
+		PasswordService:        passwordService,
+		TokenService:           tokenService,
+		AccountRepository:      accountRepository,
+		RefreshTokenRepository: refreshTokenRepository,
+		UserServiceClient:      userServiceClient,
 	}, nil
 }
 

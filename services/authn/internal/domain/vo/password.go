@@ -41,7 +41,7 @@ func (p *Password) Value() string {
 }
 
 func (p *Password) String() string {
-	return p.Value()
+	return ""
 }
 
 func (p *Password) ToMap() map[string]any {
