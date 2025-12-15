@@ -66,6 +66,14 @@ func (handler *editHandler) Handle(ctx context.Context, command EditCommand) (*v
 	}
 
 	if command.Login != nil {
+		a, err := handler.accountRepository.FindByLogin(ctx, *command.Login)
+		if err != nil {
+			return nil, err
+		}
+		if a != nil {
+			return nil, application.NewNotAuthorizedError("login already taken")
+		}
+
 		account.ChangeLogin(*command.Login)
 	}
 
@@ -73,6 +81,14 @@ func (handler *editHandler) Handle(ctx context.Context, command EditCommand) (*v
 		email, err := vo.NewEmail(*command.Email)
 		if err != nil {
 			return nil, err
+		}
+
+		a, err := handler.accountRepository.FindByEmail(ctx, email)
+		if err != nil {
+			return nil, err
+		}
+		if a != nil {
+			return nil, application.NewNotAuthorizedError("email already taken")
 		}
 
 		account.ChangeEmail(email)

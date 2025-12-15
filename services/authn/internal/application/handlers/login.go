@@ -85,7 +85,7 @@ func (handler *loginHandler) Handle(ctx context.Context, command LoginCommand) (
 	}
 
 	if account == nil {
-		return nil, nil, application.NewNotFoundError(
+		return nil, nil, application.NewNotAuthorizedError(
 			fmt.Sprintf(
 				"not found account with identifier %q, type %q",
 				command.Identifier,

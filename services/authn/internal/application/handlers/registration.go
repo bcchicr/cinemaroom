@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 
+	"github.com/bcchicr/cinemaroom/services/authn/internal/application"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application/clients"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/application/handlers/resources"
 	"github.com/bcchicr/cinemaroom/services/authn/internal/domain"
@@ -48,17 +49,34 @@ func NewRegistrationHandler(
 }
 
 func (handler *registrationHandler) Handle(ctx context.Context, command RegisterCommand) (*vo.AccessToken, *resources.RefreshTokenResource, error) {
-	id, err := handler.accountRepository.NextIdentity()
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var email *vo.Email
+	var err error
 	if command.Email != nil {
 		email, err = vo.NewEmail(*command.Email)
 		if err != nil {
 			return nil, nil, err
 		}
+	}
+
+	a, err := handler.accountRepository.FindByEmail(ctx, email)
+	if err != nil {
+		return nil, nil, err
+	}
+	if a != nil {
+		return nil, nil, application.NewNotAuthorizedError("email already taken")
+	}
+
+	a, err = handler.accountRepository.FindByLogin(ctx, command.Login)
+	if err != nil {
+		return nil, nil, err
+	}
+	if a != nil {
+		return nil, nil, application.NewNotAuthorizedError("login already taken")
+	}
+
+	id, err := handler.accountRepository.NextIdentity()
+	if err != nil {
+		return nil, nil, err
 	}
 
 	password, err := vo.NewPassword(command.Password)
@@ -70,7 +88,7 @@ func (handler *registrationHandler) Handle(ctx context.Context, command Register
 	if err != nil {
 		return nil, nil, err
 	}
-	
+
 	account, err := aggregates.NewAccount(
 		id,
 		command.Login,
