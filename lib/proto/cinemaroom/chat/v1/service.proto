@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package cinemaroom.chat.v1.service;
+
+option php_namespace = "GRPC\\Services\\Chat\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Chat\\v1";
+
+import "cinemaroom/chat/v1/request.proto";
+import "cinemaroom/chat/v1/respone.proto";
+
+service ChatService {
+  rpc CreateRoom (chat.v1.request.CreateRoomRequest) returns (chat.v1.response.CreateRoomResponse);
+  rpc UpdateRoom (chat.v1.request.UpdateRoomRequest) returns (chat.v1.response.UpdateRoomResponse);
+  rpc ListRooms (chat.v1.request.ListRoomsRequest) returns (chat.v1.response.ListRoomsResponse);
+  rpc ShowRoom (chat.v1.request.ShowRoomRequest) returns (chat.v1.response.ShowRoomResponse);
+  rpc SendMessage (chat.v1.request.SendMessageRequest) returns (chat.v1.response.SendMessageResponse);
+  rpc GetMessages (chat.v1.request.GetMessagesRequest) returns (chat.v1.response.GetMessagesResponse);
+}

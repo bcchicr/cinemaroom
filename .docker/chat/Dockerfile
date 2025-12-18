@@ -21,7 +21,7 @@ ARG ROADRUNNER_VERSION
 RUN --mount=type=bind,from=php_ext_installer_stage,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
     apk update \
     && PHP_VER=$(php -r 'echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;') \
-    && apk add --no-cache "php${PHP_VER}-pecl-grpc" "php${PHP_VER}-pecl-protobuf" "protoc=${PROTOC_VERSION}" \
+    && apk add --no-cache "php${PHP_VER}-pecl-grpc" "php${PHP_VER}-pecl-protobuf" "protoc=${PROTOC_VERSION}" "protobuf-dev" \
     && EXT_DIR=$(php-config --extension-dir) \
     && cp "/usr/lib/php${PHP_VER}/modules/grpc.so" "${EXT_DIR}/grpc.so" \
     && cp "/usr/lib/php${PHP_VER}/modules/protobuf.so" "${EXT_DIR}/protobuf.so" \

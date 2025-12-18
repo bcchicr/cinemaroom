@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package cinemaroom.chat.v1.message;
+
+option php_namespace = "GRPC\\Services\\Chat\\v1";
+option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Chat\\v1";
+
+message Room {
+}
+
+message Message {
+}
