@@ -5,8 +5,6 @@ package cinemaroom.authn.v1.request;
 option php_namespace = "GRPC\\Services\\Authn\\v1";
 option php_metadata_namespace = "GRPC\\ProtobufMetadata\\Authn\\v1";
 
-import "cinemaroom/authn/v1/message.proto";
-
 message RegisterRequest {
   string login = 1;
   optional string email = 2;
